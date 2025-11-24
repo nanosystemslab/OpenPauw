@@ -1,0 +1,43 @@
+# KiCAD Backup Files
+*-backups/
+*.bak
+*.bck
+*~
+
+# KiCAD Autosave Files
+*-save.kicad_pcb
+*-save.kicad_sch
+_autosave-*
+
+# KiCAD Personal Preferences (local settings)
+*.kicad_prl
+
+# KiCAD Cache Files
+fp-info-cache
+*-cache.lib
+*.cache
+
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Temporary Files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Downloaded component files (optional - uncomment if you don't want to track these)
+# *.zip
+
+# Gerber and Manufacturing Files (optional - uncomment if generated locally)
+# gerber/
+# *.gbr
+# *.drl

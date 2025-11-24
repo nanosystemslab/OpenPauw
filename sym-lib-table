@@ -1,0 +1,7 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "2025-11-18_23-52-10")(type "KiCad")(uri "${KIPRJMOD}/footprints/MAX328/2025-11-18_23-52-10.kicad_sym")(options "")(descr ""))
+  (lib (name "MCP23017-E_SP")(type "KiCad")(uri "${KIPRJMOD}/footprints/MCP23017_E_SP/MCP23017-E_SP.kicad_sym")(options "")(descr ""))
+  (lib (name "OpenPauw-eagle-import")(type "KiCad")(uri "${KIPRJMOD}/OpenPauw-eagle-import.kicad_sym")(options "")(descr ""))
+  (lib (name "Adafruit-Feather-RP2040")(type "KiCad")(uri "${KIPRJMOD}/footprints/Adafruit-RP2040-KiCAD/Adafruit-Feather-RP2040.kicad_sym")(options "")(descr ""))
+)
