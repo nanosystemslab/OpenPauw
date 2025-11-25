@@ -35,7 +35,7 @@ Desktop.ini
 *~
 
 # Downloaded component files (optional - uncomment if you don't want to track these)
-# *.zip
+*.zip
 
 # Gerber and Manufacturing Files (optional - uncomment if generated locally)
 # gerber/
