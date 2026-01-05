@@ -1,3 +1,3 @@
-[submodule "footprints/Adafruit-RP2040-KiCAD"]
-	path = footprints/Adafruit-RP2040-KiCAD
+[submodule "cad/footprints/Adafruit-RP2040-KiCAD"]
+	path = cad/footprints/Adafruit-RP2040-KiCAD
 	url = https://github.com/bluepylons/Adafruit-RP2040-KiCAD.git
