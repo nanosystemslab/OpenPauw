@@ -1,10 +1,13 @@
 #include "protocol.h"
 
 #include <ctype.h>
+#include <stdlib.h>
 
+#include "test_mode.h"
 #include "vdp_sequences.h"
 
-Protocol::Protocol(Max328Router &router) : router_(router) {}
+Protocol::Protocol(Max328Router &router, TestMode *test_mode)
+    : router_(router), test_mode_(test_mode) {}
 
 void Protocol::begin() { line_.reserve(80); }
 
@@ -48,6 +51,15 @@ void Protocol::handle_line(const String &line) {
     return;
   }
 
+  if (upper == "TEST?") {
+    if (!test_mode_) {
+      Serial.println("ERR");
+      return;
+    }
+    print_test_status();
+    return;
+  }
+
   if (upper.startsWith("CFG")) {
     String tokens[2];
     int count = split_tokens(upper, tokens, 2);
@@ -60,6 +72,20 @@ void Protocol::handle_line(const String &line) {
         Serial.println(cfg_id);
         return;
       }
+    }
+    Serial.println("ERR");
+    return;
+  }
+
+  if (upper.startsWith("ENMASK")) {
+    String tokens[2];
+    int count = split_tokens(upper, tokens, 2);
+    uint32_t mask_value = 0;
+    if (count == 2 && parse_uint32(tokens[1], mask_value) && mask_value <= 15) {
+      router_.set_enable_mask(static_cast<uint8_t>(mask_value));
+      Serial.print("OK ENMASK ");
+      Serial.println(mask_value);
+      return;
     }
     Serial.println("ERR");
     return;
@@ -78,6 +104,43 @@ void Protocol::handle_line(const String &line) {
         print_ok_set(state);
         return;
       }
+    }
+    Serial.println("ERR");
+    return;
+  }
+
+  if (upper.startsWith("TEST")) {
+    if (!test_mode_) {
+      Serial.println("ERR");
+      return;
+    }
+    String tokens[3];
+    int count = split_tokens(upper, tokens, 3);
+    if (count == 1 || (count >= 2 && tokens[1] == "ON")) {
+      uint32_t interval_ms = test_mode_->interval_ms();
+      if (count == 3) {
+        uint32_t parsed = 0;
+        if (!parse_uint32(tokens[2], parsed)) {
+          Serial.println("ERR");
+          return;
+        }
+        interval_ms = parsed;
+      }
+      test_mode_->start(interval_ms);
+      Serial.println("OK TEST ON");
+      print_test_status();
+      return;
+    }
+    if (count == 2 && tokens[1] == "OFF") {
+      test_mode_->stop();
+      Serial.println("OK TEST OFF");
+      return;
+    }
+    if (count == 2 && tokens[1] == "STEP") {
+      test_mode_->step_once();
+      Serial.println("OK TEST STEP");
+      print_test_status();
+      return;
     }
     Serial.println("ERR");
     return;
@@ -114,6 +177,18 @@ bool Protocol::parse_pad_token(const String &token, Pad &pad) {
   return parse_pad_char(token[0], pad);
 }
 
+bool Protocol::parse_uint32(const String &token, uint32_t &value) {
+  char buf[16];
+  size_t len = token.length();
+  if (len == 0 || len >= sizeof(buf)) {
+    return false;
+  }
+  token.toCharArray(buf, sizeof(buf));
+  char *end = nullptr;
+  value = static_cast<uint32_t>(strtoul(buf, &end, 10));
+  return end && *end == '\0';
+}
+
 void Protocol::print_state() {
   const RouterState &state = router_.state();
   Serial.print("STATE CFG=");
@@ -142,7 +217,42 @@ void Protocol::print_ok_set(const RouterState &state) {
 void Protocol::print_help() {
   Serial.println("PING -> PONG");
   Serial.println("CFG n (1-4) -> apply preset");
+  Serial.println("ENMASK m (0-15) -> enable mask for IP/IM/VP/VM");
   Serial.println("SET ip im vp vm (A-D) -> apply routing");
   Serial.println("STATE? -> report current state");
+  Serial.println("TEST ON [ms] -> start test mode");
+  Serial.println("TEST STEP -> advance one step");
+  Serial.println("TEST OFF -> stop test mode");
+  Serial.println("TEST? -> report test status");
   Serial.println("HELP -> this message");
+}
+
+void Protocol::print_test_status() {
+  if (!test_mode_) {
+    Serial.println("TEST ACTIVE=0");
+    return;
+  }
+  uint8_t mask = test_mode_->current_enable_mask();
+  const char *line = "MULTI";
+  if (mask == Max328Router::kEnableIp) {
+    line = "IP";
+  } else if (mask == Max328Router::kEnableIm) {
+    line = "IM";
+  } else if (mask == Max328Router::kEnableVp) {
+    line = "VP";
+  } else if (mask == Max328Router::kEnableVm) {
+    line = "VM";
+  } else if (mask == 0) {
+    line = "NONE";
+  }
+  Serial.print("TEST ACTIVE=");
+  Serial.print(test_mode_->active() ? 1 : 0);
+  Serial.print(" AUTO=");
+  Serial.print(test_mode_->auto_run() ? 1 : 0);
+  Serial.print(" INTERVAL_MS=");
+  Serial.print(test_mode_->interval_ms());
+  Serial.print(" PAD=");
+  Serial.print(pad_to_char(test_mode_->current_pad()));
+  Serial.print(" EN=");
+  Serial.println(line);
 }

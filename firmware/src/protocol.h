@@ -4,20 +4,25 @@
 
 #include "max328_router.h"
 
+class TestMode;
+
 class Protocol {
  public:
-  explicit Protocol(Max328Router &router);
+  explicit Protocol(Max328Router &router, TestMode *test_mode = nullptr);
   void begin();
   void update();
 
  private:
   Max328Router &router_;
+  TestMode *test_mode_;
   String line_;
 
   void handle_line(const String &line);
   int split_tokens(const String &line, String *tokens, int max_tokens);
   bool parse_pad_token(const String &token, Pad &pad);
+  bool parse_uint32(const String &token, uint32_t &value);
   void print_state();
   void print_ok_set(const RouterState &state);
   void print_help();
+  void print_test_status();
 };

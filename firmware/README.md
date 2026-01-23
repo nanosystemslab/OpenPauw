@@ -56,10 +56,17 @@ Line-based ASCII commands (newline terminated):
 
 - `PING` -> `PONG`
 - `CFG n` (1-4) -> `OK CFG n`
+- `ENMASK m` (0-15) -> `OK ENMASK m`
 - `STATE?` -> `STATE CFG=<n> IP=<A-D> IM=<A-D> VP=<A-D> VM=<A-D>`
 - `SET ip im vp vm` -> `OK SET IP=<A-D> IM=<A-D> VP=<A-D> VM=<A-D>`
+- `TEST ON [ms]` -> `OK TEST ON` (auto step)
+- `TEST STEP` -> `OK TEST STEP`
+- `TEST OFF` -> `OK TEST OFF`
+- `TEST?` -> `TEST ACTIVE=<0|1> AUTO=<0|1> INTERVAL_MS=<n> PAD=<A-D> EN=<IP|IM|VP|VM|NONE|MULTI>`
 - `HELP` -> prints help
 - Invalid -> `ERR`
+
+Enable mask bits: bit0=IP, bit1=IM, bit2=VP, bit3=VM.
 
 ## Default Behavior
 
@@ -69,10 +76,18 @@ Line-based ASCII commands (newline terminated):
 
 ## Pin Map (RP2040 GPIO)
 
-- U1 (L_PLUS): A0=26, A1=27, A2=28
-- U2 (L_MINUS): A0=29, A1=24, A2=25
-- U3 (V_PLUS): A0=18, A1=19, A2=20
-- U4 (V_MINUS): A0=1, A1=0, A2=6
+Shared address bus (A0-A2) for all MAX328 devices:
+
+- A0 = GPIO10 (D10)
+- A1 = GPIO11 (D11)
+- A2 = GPIO12 (D12)
+
+Enable pins per device:
+
+- EN_U1 (I+) = GPIO9 (D9)
+- EN_U2 (I-) = GPIO6 (D6)
+- EN_U3 (V+) = GPIO5 (D5)
+- EN_U4 (V-) = GPIO4 (D4)
 
 ## Preset Configurations
 

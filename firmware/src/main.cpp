@@ -2,15 +2,18 @@
 
 #include "max328_router.h"
 #include "protocol.h"
+#include "test_mode.h"
 #include "vdp_sequences.h"
 
 Max328Router router;
-Protocol protocol(router);
+TestMode test_mode(router);
+Protocol protocol(router, &test_mode);
 
 void setup() {
   Serial.begin(115200);
 
   router.begin();
+  test_mode.begin();
 
   RouterState default_state;
   if (get_vdp_config(1, default_state)) {
@@ -22,7 +25,10 @@ void setup() {
   protocol.begin();
 }
 
-void loop() { protocol.update(); }
+void loop() {
+  protocol.update();
+  test_mode.update();
+}
 
 // Python (pyserial) example:
 //
