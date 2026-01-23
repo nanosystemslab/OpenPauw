@@ -5,7 +5,15 @@ cd "$(dirname "$0")/.."
 
 PORT="${1:-${UPLOAD_PORT:-}}"
 if [ -n "$PORT" ]; then
-  python -m platformio run -t upload --upload-port "$PORT"
+  if command -v pio >/dev/null 2>&1; then
+    pio run -t upload --upload-port "$PORT"
+  else
+    python -m platformio run -t upload --upload-port "$PORT"
+  fi
 else
-  python -m platformio run -t upload
+  if command -v pio >/dev/null 2>&1; then
+    pio run -t upload
+  else
+    python -m platformio run -t upload
+  fi
 fi
