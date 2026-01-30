@@ -3,11 +3,15 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+#include "switch_validator.h"
 #include "test_mode.h"
 #include "vdp_sequences.h"
 
-Protocol::Protocol(Max328Router &router, TestMode *test_mode)
-    : router_(router), test_mode_(test_mode) {}
+Protocol::Protocol(Max328Router &router, TestMode *test_mode,
+                   SwitchValidator *switch_validator)
+    : router_(router),
+      test_mode_(test_mode),
+      switch_validator_(switch_validator) {}
 
 void Protocol::begin() { line_.reserve(80); }
 
@@ -146,6 +150,17 @@ void Protocol::handle_line(const String &line) {
     return;
   }
 
+  if (upper == "SWTEST") {
+    if (!switch_validator_) {
+      Serial.println("ERR NO_VALIDATOR");
+      return;
+    }
+    SwitchValidator::ScanResult result = switch_validator_->scan();
+    switch_validator_->print_result(result);
+    Serial.println("OK SWTEST");
+    return;
+  }
+
   Serial.println("ERR");
 }
 
@@ -224,6 +239,7 @@ void Protocol::print_help() {
   Serial.println("TEST STEP -> advance one step");
   Serial.println("TEST OFF -> stop test mode");
   Serial.println("TEST? -> report test status");
+  Serial.println("SWTEST -> scan switch matrix (GPIO 0-3 out, 26-29 in)");
   Serial.println("HELP -> this message");
 }
 

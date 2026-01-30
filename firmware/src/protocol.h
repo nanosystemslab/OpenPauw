@@ -5,16 +5,19 @@
 #include "max328_router.h"
 
 class TestMode;
+class SwitchValidator;
 
 class Protocol {
  public:
-  explicit Protocol(Max328Router &router, TestMode *test_mode = nullptr);
+  explicit Protocol(Max328Router &router, TestMode *test_mode = nullptr,
+                    SwitchValidator *switch_validator = nullptr);
   void begin();
   void update();
 
  private:
   Max328Router &router_;
   TestMode *test_mode_;
+  SwitchValidator *switch_validator_;
   String line_;
 
   void handle_line(const String &line);
