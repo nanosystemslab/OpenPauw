@@ -17,11 +17,11 @@ class SwitchValidator {
   // A0-A3 on Feather RP2040 = GP26-29
   static constexpr uint8_t kInputPins[kNumInputs] = {26, 27, 28, 29};
 
-  // MAX328 Enable pins: U1=GPIO21, U2=GPIO20, U3=GPIO19, U4=GPIO16
-  static constexpr uint8_t kEnablePins[kNumChips] = {21, 20, 19, 16};
+  // MAX328 Enable pins: U1=D9(GP9), U2=D6(GP8), U3=D5(GP7), U4=D4(GP6)
+  static constexpr uint8_t kEnablePins[kNumChips] = {9, 8, 7, 6};
 
-  // MAX328 Address pins (shared across all chips): A0=GP24, A1=GP23, A2=GP22
-  static constexpr uint8_t kAddrPins[3] = {24, 23, 22};
+  // MAX328 Address pins (shared): A0=D10(GP10), A1=D11(GP11), A2=D12(GP12)
+  static constexpr uint8_t kAddrPins[3] = {10, 11, 12};
 
   // Result matrix: connections[chip][pad] = true if U(chip+1) connects to PAD(pad)
   struct ScanResult {

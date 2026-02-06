@@ -2,14 +2,14 @@
 
 #include <ctype.h>
 
-// Address pins: A0=GP24, A1=GP23, A2=GP22 (shared across all chips)
-const Max328Router::ChipPins Max328Router::kChipLPlus = {24, 23, 22};
-const Max328Router::ChipPins Max328Router::kChipLMinus = {24, 23, 22};
-const Max328Router::ChipPins Max328Router::kChipVPlus = {24, 23, 22};
-const Max328Router::ChipPins Max328Router::kChipVMinus = {24, 23, 22};
-// Enable pins: U1=GPIO21, U2=GPIO20, U3=GPIO19, U4=GPIO16
+// Address pins: A0=D10(GP10), A1=D11(GP11), A2=D12(GP12) (shared across all chips)
+const Max328Router::ChipPins Max328Router::kChipLPlus = {10, 11, 12};
+const Max328Router::ChipPins Max328Router::kChipLMinus = {10, 11, 12};
+const Max328Router::ChipPins Max328Router::kChipVPlus = {10, 11, 12};
+const Max328Router::ChipPins Max328Router::kChipVMinus = {10, 11, 12};
+// Enable pins: U1=D9(GP9), U2=D6(GP8), U3=D5(GP7), U4=D4(GP6)
 // Order is {IP, IM, VP, VM} which maps to {U1, U2, U3, U4}
-const Max328Router::EnablePins Max328Router::kEnablePins = {21, 20, 19, 16};
+const Max328Router::EnablePins Max328Router::kEnablePins = {9, 8, 7, 6};
 
 char pad_to_char(Pad pad) {
   switch (pad) {
