@@ -46,6 +46,12 @@ void Protocol::handle_line(const String &line) {
     return;
   }
 
+  if (upper == "VERSION" || upper == "VER") {
+    Serial.print("OpenPauw Firmware v");
+    Serial.println(FIRMWARE_VERSION);
+    return;
+  }
+
   if (upper == "HELP") {
     print_help();
     return;
@@ -243,6 +249,7 @@ void Protocol::print_ok_set(const RouterState &state) {
 
 void Protocol::print_help() {
   Serial.println("PING -> PONG");
+  Serial.println("VERSION -> firmware version");
   Serial.println("CFG n (1-4) -> apply preset");
   Serial.println("ENMASK m (0-15) -> enable mask for IP/IM/VP/VM");
   Serial.println("SET ip im vp vm (A-D) -> apply routing");
@@ -251,7 +258,7 @@ void Protocol::print_help() {
   Serial.println("TEST STEP -> advance one step");
   Serial.println("TEST OFF -> stop test mode");
   Serial.println("TEST? -> report test status");
-  Serial.println("SWTEST -> scan switch matrix (GPIO 0-3 out, 26-29 in)");
+  Serial.println("SWTEST -> scan MAX328 switch matrix");
   Serial.println("HELP -> this message");
 }
 
