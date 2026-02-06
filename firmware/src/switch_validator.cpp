@@ -126,3 +126,68 @@ void SwitchValidator::print_result(const ScanResult& result) {
   Serial.print("CONNECTIONS: ");
   Serial.println(result.connection_count);
 }
+
+bool SwitchValidator::verify_config(uint8_t ip_pad, uint8_t im_pad, uint8_t vp_pad, uint8_t vm_pad) {
+  // Test each channel individually with the router's current enable state
+  // Chip order: U1=IP, U2=IM, U3=VP, U4=VM
+  uint8_t expected_pads[4] = {ip_pad, im_pad, vp_pad, vm_pad};
+  bool results[4] = {false, false, false, false};
+
+  for (uint8_t chip = 0; chip < kNumChips; chip++) {
+    // Disable all chips
+    set_all_enables(false);
+    delayMicroseconds(100);
+
+    // Enable only this chip
+    digitalWrite(kEnablePins[chip], HIGH);
+    delayMicroseconds(100);
+
+    // Set address to the expected pad for this chip
+    uint8_t pad = expected_pads[chip];
+    set_address(pad);
+    delayMicroseconds(100);
+
+    // Drive the expected pad HIGH
+    set_all_outputs_low();
+    digitalWrite(kOutputPins[pad], HIGH);
+    delayMicroseconds(100);
+
+    // Read this chip's input
+    results[chip] = (digitalRead(kInputPins[chip]) == HIGH);
+
+    // Disable this chip
+    digitalWrite(kEnablePins[chip], LOW);
+  }
+
+  set_all_outputs_low();
+  set_all_enables(false);
+
+  print_verify_result(ip_pad, im_pad, vp_pad, vm_pad,
+                      results[0], results[1], results[2], results[3]);
+
+  return results[0] && results[1] && results[2] && results[3];
+}
+
+void SwitchValidator::print_verify_result(uint8_t ip_pad, uint8_t im_pad,
+                                          uint8_t vp_pad, uint8_t vm_pad,
+                                          bool ip_ok, bool im_ok,
+                                          bool vp_ok, bool vm_ok) {
+  const char pad_chars[] = "ABCD";
+
+  Serial.println("CFGTEST RESULT:");
+  Serial.print("  IP (U1/J1) -> PAD_");
+  Serial.print(pad_chars[ip_pad]);
+  Serial.println(ip_ok ? " : PASS" : " : FAIL");
+
+  Serial.print("  IM (U2/J2) -> PAD_");
+  Serial.print(pad_chars[im_pad]);
+  Serial.println(im_ok ? " : PASS" : " : FAIL");
+
+  Serial.print("  VP (U3/J3) -> PAD_");
+  Serial.print(pad_chars[vp_pad]);
+  Serial.println(vp_ok ? " : PASS" : " : FAIL");
+
+  Serial.print("  VM (U4/J4) -> PAD_");
+  Serial.print(pad_chars[vm_pad]);
+  Serial.println(vm_ok ? " : PASS" : " : FAIL");
+}

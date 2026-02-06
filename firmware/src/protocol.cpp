@@ -171,10 +171,36 @@ void Protocol::handle_line(const String &line) {
     // Set LED based on connection count
     if (result.connection_count == 0) {
       status_led.set_state(LedState::SWTEST_FAIL);  // Red - no connections
-    } else if (result.connection_count == 4) {
+    } else if (result.connection_count == 16) {
       status_led.set_state(LedState::SWTEST_PASS);  // Green - expected full matrix
     } else {
       status_led.set_state(LedState::SWTEST_PARTIAL);  // Yellow - partial
+    }
+    return;
+  }
+
+  if (upper == "CFGTEST") {
+    if (!switch_validator_) {
+      Serial.println("ERR NO_VALIDATOR");
+      status_led.set_state(LedState::ERROR);
+      return;
+    }
+    status_led.set_state(LedState::BUSY);
+
+    // Get current router state and verify the routing
+    const RouterState& state = router_.state();
+    bool pass = switch_validator_->verify_config(
+        static_cast<uint8_t>(state.ip),
+        static_cast<uint8_t>(state.im),
+        static_cast<uint8_t>(state.vp),
+        static_cast<uint8_t>(state.vm));
+
+    if (pass) {
+      Serial.println("OK CFGTEST PASS");
+      status_led.set_state(LedState::SWTEST_PASS);
+    } else {
+      Serial.println("ERR CFGTEST FAIL");
+      status_led.set_state(LedState::SWTEST_FAIL);
     }
     return;
   }
@@ -250,7 +276,8 @@ void Protocol::print_ok_set(const RouterState &state) {
 void Protocol::print_help() {
   Serial.println("PING -> PONG");
   Serial.println("VERSION -> firmware version");
-  Serial.println("CFG n (1-4) -> apply preset");
+  Serial.println("CFG n (1-4) -> apply VDP preset");
+  Serial.println("CFGTEST -> verify current config routing");
   Serial.println("ENMASK m (0-15) -> enable mask for IP/IM/VP/VM");
   Serial.println("SET ip im vp vm (A-D) -> apply routing");
   Serial.println("STATE? -> report current state");
@@ -258,7 +285,7 @@ void Protocol::print_help() {
   Serial.println("TEST STEP -> advance one step");
   Serial.println("TEST OFF -> stop test mode");
   Serial.println("TEST? -> report test status");
-  Serial.println("SWTEST -> scan MAX328 switch matrix");
+  Serial.println("SWTEST -> scan full MAX328 matrix");
   Serial.println("HELP -> this message");
 }
 

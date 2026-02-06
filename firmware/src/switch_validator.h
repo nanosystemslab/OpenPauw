@@ -38,6 +38,14 @@ class SwitchValidator {
   // Print scan results to Serial
   void print_result(const ScanResult& result);
 
+  // Verify a specific configuration is routed correctly
+  // Returns true if all 4 channels route to expected pads
+  bool verify_config(uint8_t ip_pad, uint8_t im_pad, uint8_t vp_pad, uint8_t vm_pad);
+
+  // Print verification result
+  void print_verify_result(uint8_t ip_pad, uint8_t im_pad, uint8_t vp_pad, uint8_t vm_pad,
+                           bool ip_ok, bool im_ok, bool vp_ok, bool vm_ok);
+
  private:
   void set_all_outputs_low();
   void set_all_enables(bool enabled);
