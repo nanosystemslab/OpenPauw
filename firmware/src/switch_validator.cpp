@@ -63,33 +63,41 @@ SwitchValidator::ScanResult SwitchValidator::scan() {
     }
   }
 
-  // Enable all MAX328 chips
-  set_all_enables(true);
-  delayMicroseconds(100);
-
-  // For each pad (S1-S4), set address and test
-  for (uint8_t pad = 0; pad < kNumOutputs; pad++) {
-    // Start with all outputs LOW
-    set_all_outputs_low();
-
-    // Set address to select this pad (S1=addr0, S2=addr1, etc.)
-    set_address(pad);
+  // Test each chip one at a time (they share address lines)
+  for (uint8_t chip = 0; chip < kNumChips; chip++) {
+    // Disable all chips first
+    set_all_enables(false);
     delayMicroseconds(100);
 
-    // Drive this pad HIGH via output pin
-    digitalWrite(kOutputPins[pad], HIGH);
+    // Enable only this chip
+    digitalWrite(kEnablePins[chip], HIGH);
     delayMicroseconds(100);
 
-    // Read all inputs (J1-J4 = U1-U4 D outputs)
-    for (uint8_t chip = 0; chip < kNumChips; chip++) {
+    // For each pad (S1-S4), set address and test
+    for (uint8_t pad = 0; pad < kNumOutputs; pad++) {
+      // Start with all outputs LOW
+      set_all_outputs_low();
+
+      // Set address to select this pad (S1=addr0, S2=addr1, etc.)
+      set_address(pad);
+      delayMicroseconds(100);
+
+      // Drive this pad HIGH via output pin
+      digitalWrite(kOutputPins[pad], HIGH);
+      delayMicroseconds(100);
+
+      // Read the input for this chip
       if (digitalRead(kInputPins[chip]) == HIGH) {
         result.connections[chip][pad] = true;
         result.connection_count++;
       }
     }
+
+    // Disable this chip before moving to next
+    digitalWrite(kEnablePins[chip], LOW);
   }
 
-  // Return outputs to LOW state and disable chips
+  // Return outputs to LOW state and disable all chips
   set_all_outputs_low();
   set_all_enables(false);
 

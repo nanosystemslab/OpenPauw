@@ -18,8 +18,8 @@ class SwitchValidator {
   // MAX328 Enable pins: U1=GPIO21, U2=GPIO20, U3=GPIO19, U4=GPIO16
   static constexpr uint8_t kEnablePins[kNumChips] = {21, 20, 19, 16};
 
-  // MAX328 Address pins (shared across all chips): A0=GP10, A1=GP11, A2=GP12
-  static constexpr uint8_t kAddrPins[3] = {10, 11, 12};
+  // MAX328 Address pins (shared across all chips): A0=GP24, A1=GP23, A2=GP22
+  static constexpr uint8_t kAddrPins[3] = {24, 23, 22};
 
   // Result matrix: connections[chip][pad] = true if U(chip+1) connects to PAD(pad)
   struct ScanResult {
