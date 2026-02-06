@@ -9,7 +9,9 @@ class SwitchValidator {
   static constexpr uint8_t kNumChips = 4;    // U1, U2, U3, U4
 
   // Output pins - directly drive J5 pads (S1-S4 on all MAX328s)
-  static constexpr uint8_t kOutputPins[kNumOutputs] = {0, 1, 2, 3};
+  // J5 pin 1 (PAD_A) = MOSI (GP19), pin 2 (PAD_B) = MISO (GP20)
+  // J5 pin 3 (PAD_C) = RX (GP1), pin 4 (PAD_D) = TX (GP0)
+  static constexpr uint8_t kOutputPins[kNumOutputs] = {19, 20, 1, 0};
 
   // Input pins - read J1-J4 probes (D outputs of MAX328s)
   // A0-A3 on Feather RP2040 = GP26-29
