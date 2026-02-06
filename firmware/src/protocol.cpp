@@ -71,6 +71,32 @@ void Protocol::handle_line(const String &line) {
     return;
   }
 
+  if (upper == "CFGTEST") {
+    if (!switch_validator_) {
+      Serial.println("ERR NO_VALIDATOR");
+      status_led.set_state(LedState::ERROR);
+      return;
+    }
+    status_led.set_state(LedState::BUSY);
+
+    // Get current router state and verify the routing
+    const RouterState& state = router_.state();
+    bool pass = switch_validator_->verify_config(
+        static_cast<uint8_t>(state.ip),
+        static_cast<uint8_t>(state.im),
+        static_cast<uint8_t>(state.vp),
+        static_cast<uint8_t>(state.vm));
+
+    if (pass) {
+      Serial.println("OK CFGTEST PASS");
+      status_led.set_state(LedState::SWTEST_PASS);
+    } else {
+      Serial.println("ERR CFGTEST FAIL");
+      status_led.set_state(LedState::SWTEST_FAIL);
+    }
+    return;
+  }
+
   if (upper.startsWith("CFG")) {
     String tokens[2];
     int count = split_tokens(upper, tokens, 2);
@@ -175,32 +201,6 @@ void Protocol::handle_line(const String &line) {
       status_led.set_state(LedState::SWTEST_PASS);  // Green - expected full matrix
     } else {
       status_led.set_state(LedState::SWTEST_PARTIAL);  // Yellow - partial
-    }
-    return;
-  }
-
-  if (upper == "CFGTEST") {
-    if (!switch_validator_) {
-      Serial.println("ERR NO_VALIDATOR");
-      status_led.set_state(LedState::ERROR);
-      return;
-    }
-    status_led.set_state(LedState::BUSY);
-
-    // Get current router state and verify the routing
-    const RouterState& state = router_.state();
-    bool pass = switch_validator_->verify_config(
-        static_cast<uint8_t>(state.ip),
-        static_cast<uint8_t>(state.im),
-        static_cast<uint8_t>(state.vp),
-        static_cast<uint8_t>(state.vm));
-
-    if (pass) {
-      Serial.println("OK CFGTEST PASS");
-      status_led.set_state(LedState::SWTEST_PASS);
-    } else {
-      Serial.println("ERR CFGTEST FAIL");
-      status_led.set_state(LedState::SWTEST_FAIL);
     }
     return;
   }

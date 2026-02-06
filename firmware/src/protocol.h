@@ -4,7 +4,7 @@
 
 #include "max328_router.h"
 
-#define FIRMWARE_VERSION "1.5.0"
+#define FIRMWARE_VERSION "1.5.1"
 
 class TestMode;
 class SwitchValidator;
