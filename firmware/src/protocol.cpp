@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+#include "status_led.h"
 #include "switch_validator.h"
 #include "test_mode.h"
 #include "vdp_sequences.h"
@@ -153,11 +154,22 @@ void Protocol::handle_line(const String &line) {
   if (upper == "SWTEST") {
     if (!switch_validator_) {
       Serial.println("ERR NO_VALIDATOR");
+      status_led.set_state(LedState::ERROR);
       return;
     }
+    status_led.set_state(LedState::BUSY);
     SwitchValidator::ScanResult result = switch_validator_->scan();
     switch_validator_->print_result(result);
     Serial.println("OK SWTEST");
+
+    // Set LED based on connection count
+    if (result.connection_count == 0) {
+      status_led.set_state(LedState::SWTEST_FAIL);  // Red - no connections
+    } else if (result.connection_count == 4) {
+      status_led.set_state(LedState::SWTEST_PASS);  // Green - expected full matrix
+    } else {
+      status_led.set_state(LedState::SWTEST_PARTIAL);  // Yellow - partial
+    }
     return;
   }
 

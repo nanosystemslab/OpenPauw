@@ -6,7 +6,9 @@ const Max328Router::ChipPins Max328Router::kChipLPlus = {10, 11, 12};
 const Max328Router::ChipPins Max328Router::kChipLMinus = {10, 11, 12};
 const Max328Router::ChipPins Max328Router::kChipVPlus = {10, 11, 12};
 const Max328Router::ChipPins Max328Router::kChipVMinus = {10, 11, 12};
-const Max328Router::EnablePins Max328Router::kEnablePins = {9, 6, 5, 4};
+// Enable pins: U1=GPIO21, U2=GPIO20, U3=GPIO19, U4=GPIO16
+// Order is {IP, IM, VP, VM} which maps to {U1, U2, U3, U4}
+const Max328Router::EnablePins Max328Router::kEnablePins = {21, 20, 19, 16};
 
 char pad_to_char(Pad pad) {
   switch (pad) {

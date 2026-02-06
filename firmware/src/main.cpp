@@ -2,6 +2,7 @@
 
 #include "max328_router.h"
 #include "protocol.h"
+#include "status_led.h"
 #include "switch_validator.h"
 #include "test_mode.h"
 #include "vdp_sequences.h"
@@ -13,6 +14,8 @@ Protocol protocol(router, &test_mode, &switch_validator);
 
 void setup() {
   Serial.begin(115200);
+
+  status_led.begin();
 
   router.begin();
   test_mode.begin();
@@ -31,6 +34,7 @@ void setup() {
 void loop() {
   protocol.update();
   test_mode.update();
+  status_led.update();
 }
 
 // Python (pyserial) example:
