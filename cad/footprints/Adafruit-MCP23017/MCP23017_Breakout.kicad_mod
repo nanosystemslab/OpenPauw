@@ -1,0 +1,72 @@
+(footprint "MCP23017_Breakout"
+	(version 20240108)
+	(generator "hand_crafted")
+	(layer "F.Cu")
+	(descr "Adafruit MCP23017 I2C GPIO Expander Breakout")
+	(tags "MCP23017 GPIO expander I2C breakout")
+	(attr through_hole)
+
+	(fp_text reference "REF**" (at 0 -8.89) (layer "F.SilkS")
+		(effects (font (size 1 1) (thickness 0.15)))
+	)
+	(fp_text value "MCP23017_Breakout" (at 0 8.89) (layer "F.Fab")
+		(effects (font (size 1 1) (thickness 0.15)))
+	)
+
+	;; Board outline (1.50" x 0.70" = 38.1mm x 17.78mm)
+	(fp_rect (start -19.05 -8.89) (end 19.05 8.89)
+		(stroke (width 0.15) (type default))
+		(fill none)
+		(layer "F.SilkS")
+	)
+
+	;; Top row - 14 pins, 0.1" pitch, starting from left
+	;; Row is at Y = -6.35mm (0.25" from center = half of 0.5" spacing)
+	;; First pin at X = -16.51mm (14 pins * 2.54mm / 2 - 1.27mm offset)
+
+	;; Top row: IA, IB, D0, D1, D2, B7, B6, B5, B4, B3, B2, B1, B0, GND
+	(pad "IA" thru_hole circle (at -16.51 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "IB" thru_hole circle (at -13.97 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "D0" thru_hole circle (at -11.43 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "D1" thru_hole circle (at -8.89 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "D2" thru_hole circle (at -6.35 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "B7" thru_hole circle (at -3.81 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "B6" thru_hole circle (at -1.27 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "B5" thru_hole circle (at 1.27 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "B4" thru_hole circle (at 3.81 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "B3" thru_hole circle (at 6.35 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "B2" thru_hole circle (at 8.89 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "B1" thru_hole circle (at 11.43 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "B0" thru_hole circle (at 13.97 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "GND1" thru_hole circle (at 16.51 -6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+
+	;; Bottom row - 13 pins
+	;; Row is at Y = +6.35mm
+	;; VIN, GND, SCL, SDA, RST, A0, A1, A2, A3, A4, A5, A6, A7
+	(pad "VIN" thru_hole rect (at -16.51 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "GND2" thru_hole circle (at -13.97 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "SCL" thru_hole circle (at -11.43 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "SDA" thru_hole circle (at -8.89 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "RST" thru_hole circle (at -6.35 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "A0" thru_hole circle (at -3.81 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "A1" thru_hole circle (at -1.27 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "A2" thru_hole circle (at 1.27 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "A3" thru_hole circle (at 3.81 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "A4" thru_hole circle (at 6.35 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "A5" thru_hole circle (at 8.89 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "A6" thru_hole circle (at 11.43 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+	(pad "A7" thru_hole circle (at 13.97 6.35) (size 1.7 1.7) (drill 1.0) (layers "*.Cu" "*.Mask"))
+
+	;; Mounting holes (4 corners)
+	(pad "" np_thru_hole circle (at -17.78 -7.62) (size 2.5 2.5) (drill 2.5) (layers "*.Cu" "*.Mask"))
+	(pad "" np_thru_hole circle (at 17.78 -7.62) (size 2.5 2.5) (drill 2.5) (layers "*.Cu" "*.Mask"))
+	(pad "" np_thru_hole circle (at -17.78 7.62) (size 2.5 2.5) (drill 2.5) (layers "*.Cu" "*.Mask"))
+	(pad "" np_thru_hole circle (at 17.78 7.62) (size 2.5 2.5) (drill 2.5) (layers "*.Cu" "*.Mask"))
+
+	;; Pin 1 indicator
+	(fp_circle (center -16.51 -3.81) (end -15.51 -3.81)
+		(stroke (width 0.15) (type solid))
+		(fill none)
+		(layer "F.SilkS")
+	)
+)
