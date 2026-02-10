@@ -2201,6 +2201,10 @@
 		(uuid "013dc1a0-6279-4d7b-9a3c-f3c98bebd400")
 	)
 	(no_connect
+		(at 63.5 123.19)
+		(uuid "0505b34e-1bb0-4712-9663-a52dd56f7a14")
+	)
+	(no_connect
 		(at 26.67 62.23)
 		(uuid "0d85057d-5881-4371-9fb2-38f892f2e239")
 	)
@@ -2213,12 +2217,20 @@
 		(uuid "17bd2113-4e7d-436d-be53-afe989741f66")
 	)
 	(no_connect
+		(at 26.67 78.74)
+		(uuid "32ea1e5d-c4a3-4835-99cb-ada29eda035d")
+	)
+	(no_connect
 		(at 116.84 83.82)
 		(uuid "38345f7f-ae21-4a8c-8329-5496629827b7")
 	)
 	(no_connect
 		(at 116.84 86.36)
 		(uuid "4938323b-65fd-4075-9bba-addbbcfe1ceb")
+	)
+	(no_connect
+		(at 63.5 111.76)
+		(uuid "4d7191a1-0076-434c-ac0f-47873b1b8707")
 	)
 	(no_connect
 		(at 74.93 54.61)
@@ -2269,6 +2281,10 @@
 		(uuid "7d06e19e-a70c-4c00-952f-541095ce60d8")
 	)
 	(no_connect
+		(at 63.5 115.57)
+		(uuid "7f5516b2-ea99-4ac6-a73b-677a2570c2a7")
+	)
+	(no_connect
 		(at 26.67 64.77)
 		(uuid "804f52dc-5135-4427-b2ea-e565e8d41418")
 	)
@@ -2295,6 +2311,10 @@
 	(no_connect
 		(at 119.38 130.81)
 		(uuid "b34f32d4-05be-497d-af2f-6b56591bf321")
+	)
+	(no_connect
+		(at 63.5 127)
+		(uuid "b46e7d2b-4e64-4027-8dad-53c459692dce")
 	)
 	(no_connect
 		(at 74.93 69.85)
@@ -2327,6 +2347,10 @@
 	(no_connect
 		(at 74.93 67.31)
 		(uuid "e152a918-7e1e-4402-9065-72f94866b5b1")
+	)
+	(no_connect
+		(at 63.5 119.38)
+		(uuid "e819d4a8-0f37-46ee-b1a3-c725a2bfacfa")
 	)
 	(no_connect
 		(at 115.57 53.34)
@@ -3234,28 +3258,6 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
-				(hide yes)
-			)
-		)
-	)
-	(global_label "EN_U4"
-		(shape input)
-		(at 26.67 78.74 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right)
-		)
-		(uuid "6205b6c2-6113-4d25-8b47-2dc5150be572")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 17.6977 78.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
 				(hide yes)
 			)
 		)
@@ -5654,7 +5656,6 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "c08f3c0e-c5e1-48cf-b3ab-565fe5287cbb")
 		(property "Reference" "U5"
 			(at 50.8 20.32 0)
@@ -5673,7 +5674,7 @@
 			)
 		)
 		(property "Footprint" "Library:Adafruit-Feather-RP2040"
-			(at 50.673 22.352 0)
+			(at 50.8 17.78 0)
 			(effects
 				(font
 					(size 1.27 1.27)
