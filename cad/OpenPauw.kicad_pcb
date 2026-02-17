@@ -4310,7 +4310,7 @@
 				)
 			)
 		)
-		(property "Value" "~"
+		(property "Value" "GPIO Expander"
 			(at 6.38 -0.09 0)
 			(layer "F.SilkS")
 			(uuid "87b31f1b-99cc-48cb-8956-de5fc42abfbf")
