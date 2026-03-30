@@ -2,10 +2,9 @@
 
 constexpr uint8_t SwitchValidator::kOutputPins[];
 constexpr uint8_t SwitchValidator::kInputPins[];
-constexpr uint8_t SwitchValidator::kEnablePins[];
-constexpr uint8_t SwitchValidator::kAddrPins[];
+constexpr Max328Router::ChipPins SwitchValidator::kChipPins[];
 
-SwitchValidator::SwitchValidator() {}
+SwitchValidator::SwitchValidator(Adafruit_MCP23X17 &mcp) : mcp_(mcp) {}
 
 void SwitchValidator::begin() {
   // Configure output pins (directly drive J5 pads)
@@ -19,17 +18,7 @@ void SwitchValidator::begin() {
     pinMode(kInputPins[i], INPUT_PULLDOWN);
   }
 
-  // Configure enable pins (active HIGH)
-  for (uint8_t i = 0; i < kNumChips; i++) {
-    pinMode(kEnablePins[i], OUTPUT);
-    digitalWrite(kEnablePins[i], LOW);  // Start disabled
-  }
-
-  // Configure address pins
-  for (uint8_t i = 0; i < 3; i++) {
-    pinMode(kAddrPins[i], OUTPUT);
-    digitalWrite(kAddrPins[i], LOW);
-  }
+  // MCP23017 pins are already configured as OUTPUT by Max328Router::begin()
 }
 
 void SwitchValidator::set_all_outputs_low() {
@@ -40,16 +29,18 @@ void SwitchValidator::set_all_outputs_low() {
 
 void SwitchValidator::set_all_enables(bool enabled) {
   for (uint8_t i = 0; i < kNumChips; i++) {
-    digitalWrite(kEnablePins[i], enabled ? HIGH : LOW);
+    mcp_.digitalWrite(kChipPins[i].en, enabled ? HIGH : LOW);
   }
 }
 
-void SwitchValidator::set_address(uint8_t addr) {
-  // MAX328 address: A0, A1, A2 select S1-S8
-  // addr 0 = S1, addr 1 = S2, addr 2 = S3, addr 3 = S4
-  digitalWrite(kAddrPins[0], (addr & 0x01) ? HIGH : LOW);
-  digitalWrite(kAddrPins[1], (addr & 0x02) ? HIGH : LOW);
-  digitalWrite(kAddrPins[2], (addr & 0x04) ? HIGH : LOW);
+void SwitchValidator::set_chip_address(const Max328Router::ChipPins &pins, uint8_t addr) {
+  mcp_.digitalWrite(pins.a0, (addr & 0x01) ? HIGH : LOW);
+  mcp_.digitalWrite(pins.a1, (addr & 0x02) ? HIGH : LOW);
+  mcp_.digitalWrite(pins.a2, (addr & 0x04) ? HIGH : LOW);
+}
+
+void SwitchValidator::set_chip_enable(const Max328Router::ChipPins &pins, bool enabled) {
+  mcp_.digitalWrite(pins.en, enabled ? HIGH : LOW);
 }
 
 SwitchValidator::ScanResult SwitchValidator::scan() {
@@ -63,14 +54,14 @@ SwitchValidator::ScanResult SwitchValidator::scan() {
     }
   }
 
-  // Test each chip one at a time (they share address lines)
+  // Test each chip one at a time
   for (uint8_t chip = 0; chip < kNumChips; chip++) {
     // Disable all chips first
     set_all_enables(false);
     delayMicroseconds(100);
 
     // Enable only this chip
-    digitalWrite(kEnablePins[chip], HIGH);
+    set_chip_enable(kChipPins[chip], true);
     delayMicroseconds(100);
 
     // For each pad (S1-S4), set address and test
@@ -78,8 +69,8 @@ SwitchValidator::ScanResult SwitchValidator::scan() {
       // Start with all outputs LOW
       set_all_outputs_low();
 
-      // Set address to select this pad (S1=addr0, S2=addr1, etc.)
-      set_address(pad);
+      // Set address to select this pad (each chip has independent address lines)
+      set_chip_address(kChipPins[chip], pad);
       delayMicroseconds(100);
 
       // Drive this pad HIGH via output pin
@@ -94,7 +85,7 @@ SwitchValidator::ScanResult SwitchValidator::scan() {
     }
 
     // Disable this chip before moving to next
-    digitalWrite(kEnablePins[chip], LOW);
+    set_chip_enable(kChipPins[chip], false);
   }
 
   // Return outputs to LOW state and disable all chips
@@ -128,8 +119,6 @@ void SwitchValidator::print_result(const ScanResult& result) {
 }
 
 bool SwitchValidator::verify_config(uint8_t ip_pad, uint8_t im_pad, uint8_t vp_pad, uint8_t vm_pad) {
-  // Test each channel individually with the router's current enable state
-  // Chip order: U1=IP, U2=IM, U3=VP, U4=VM
   uint8_t expected_pads[4] = {ip_pad, im_pad, vp_pad, vm_pad};
   bool results[4] = {false, false, false, false};
 
@@ -139,12 +128,12 @@ bool SwitchValidator::verify_config(uint8_t ip_pad, uint8_t im_pad, uint8_t vp_p
     delayMicroseconds(100);
 
     // Enable only this chip
-    digitalWrite(kEnablePins[chip], HIGH);
+    set_chip_enable(kChipPins[chip], true);
     delayMicroseconds(100);
 
     // Set address to the expected pad for this chip
     uint8_t pad = expected_pads[chip];
-    set_address(pad);
+    set_chip_address(kChipPins[chip], pad);
     delayMicroseconds(100);
 
     // Drive the expected pad HIGH
@@ -156,7 +145,7 @@ bool SwitchValidator::verify_config(uint8_t ip_pad, uint8_t im_pad, uint8_t vp_p
     results[chip] = (digitalRead(kInputPins[chip]) == HIGH);
 
     // Disable this chip
-    digitalWrite(kEnablePins[chip], LOW);
+    set_chip_enable(kChipPins[chip], false);
   }
 
   set_all_outputs_low();

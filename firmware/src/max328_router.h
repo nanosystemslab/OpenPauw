@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Adafruit_MCP23X17.h>
 #include <Arduino.h>
 
 enum Pad : uint8_t { A = 0, B = 1, C = 2, D = 3 };
@@ -23,6 +24,23 @@ class Max328Router {
   static constexpr uint8_t kEnableVm = 1 << 3;
   static constexpr uint8_t kEnableAll = kEnableIp | kEnableIm | kEnableVp | kEnableVm;
 
+  static constexpr uint8_t kMcpAddress = 0x20;
+
+  // MCP23017 pin assignments per chip (EN, A0, A1, A2)
+  // Port A: U1 (I+) and U2 (I-)
+  // Port B: U3 (V+) and U4 (V-)
+  struct ChipPins {
+    uint8_t en;
+    uint8_t a0;
+    uint8_t a1;
+    uint8_t a2;
+  };
+
+  static constexpr ChipPins kU1Pins = {0, 1, 2, 3};    // GPA0-3: I+
+  static constexpr ChipPins kU2Pins = {4, 5, 6, 7};    // GPA4-7: I-
+  static constexpr ChipPins kU3Pins = {8, 9, 10, 11};   // GPB0-3: V+
+  static constexpr ChipPins kU4Pins = {12, 13, 14, 15}; // GPB4-7: V-
+
   Max328Router();
   void begin();
   void apply_state(const RouterState &state, uint8_t cfg_id);
@@ -31,33 +49,15 @@ class Max328Router {
   void set_enable_mask(uint8_t mask);
   uint8_t enable_mask() const;
 
+  Adafruit_MCP23X17 &mcp();
+
  private:
-  struct ChipPins {
-    uint8_t a0;
-    uint8_t a1;
-    uint8_t a2;
-  };
-
-  struct EnablePins {
-    uint8_t ip;
-    uint8_t im;
-    uint8_t vp;
-    uint8_t vm;
-  };
-
-  static const ChipPins kChipLPlus;
-  static const ChipPins kChipLMinus;
-  static const ChipPins kChipVPlus;
-  static const ChipPins kChipVMinus;
-  static const EnablePins kEnablePins;
-
-  static constexpr bool kUseEnablePins = true;
-  static constexpr bool kEnableActiveHigh = true;
-
+  Adafruit_MCP23X17 mcp_;
   RouterState state_;
   uint8_t cfg_id_;
   uint8_t enable_mask_;
 
   void set_chip(const ChipPins &pins, Pad pad);
   void apply_enable_mask();
+  void write_all();
 };

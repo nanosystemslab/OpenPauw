@@ -1,6 +1,9 @@
 #pragma once
 
+#include <Adafruit_MCP23X17.h>
 #include <Arduino.h>
+
+#include "max328_router.h"
 
 class SwitchValidator {
  public:
@@ -17,11 +20,13 @@ class SwitchValidator {
   // A0-A3 on Feather RP2040 = GP26-29
   static constexpr uint8_t kInputPins[kNumInputs] = {26, 27, 28, 29};
 
-  // MAX328 Enable pins: U1=D9(GP9), U2=D6(GP8), U3=D5(GP7), U4=D4(GP6)
-  static constexpr uint8_t kEnablePins[kNumChips] = {9, 8, 7, 6};
-
-  // MAX328 Address pins (shared): A0=D10(GP10), A1=D11(GP11), A2=D12(GP12)
-  static constexpr uint8_t kAddrPins[3] = {10, 11, 12};
+  // MCP23017 pin assignments per chip (same as Max328Router)
+  static constexpr Max328Router::ChipPins kChipPins[kNumChips] = {
+      Max328Router::kU1Pins,
+      Max328Router::kU2Pins,
+      Max328Router::kU3Pins,
+      Max328Router::kU4Pins,
+  };
 
   // Result matrix: connections[chip][pad] = true if U(chip+1) connects to PAD(pad)
   struct ScanResult {
@@ -29,7 +34,7 @@ class SwitchValidator {
     uint8_t connection_count;
   };
 
-  SwitchValidator();
+  explicit SwitchValidator(Adafruit_MCP23X17 &mcp);
   void begin();
 
   // Run a full matrix scan and return results
@@ -47,7 +52,10 @@ class SwitchValidator {
                            bool ip_ok, bool im_ok, bool vp_ok, bool vm_ok);
 
  private:
+  Adafruit_MCP23X17 &mcp_;
+
   void set_all_outputs_low();
   void set_all_enables(bool enabled);
-  void set_address(uint8_t addr);
+  void set_chip_address(const Max328Router::ChipPins &pins, uint8_t addr);
+  void set_chip_enable(const Max328Router::ChipPins &pins, bool enabled);
 };

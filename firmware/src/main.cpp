@@ -9,7 +9,7 @@
 
 Max328Router router;
 TestMode test_mode(router);
-SwitchValidator switch_validator;
+SwitchValidator switch_validator(router.mcp());
 Protocol protocol(router, &test_mode, &switch_validator);
 
 void setup() {

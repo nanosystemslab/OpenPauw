@@ -2,15 +2,6 @@
 
 #include <ctype.h>
 
-// Address pins: A0=D10(GP10), A1=D11(GP11), A2=D12(GP12) (shared across all chips)
-const Max328Router::ChipPins Max328Router::kChipLPlus = {10, 11, 12};
-const Max328Router::ChipPins Max328Router::kChipLMinus = {10, 11, 12};
-const Max328Router::ChipPins Max328Router::kChipVPlus = {10, 11, 12};
-const Max328Router::ChipPins Max328Router::kChipVMinus = {10, 11, 12};
-// Enable pins: U1=D9(GP9), U2=D6(GP8), U3=D5(GP7), U4=D4(GP6)
-// Order is {IP, IM, VP, VM} which maps to {U1, U2, U3, U4}
-const Max328Router::EnablePins Max328Router::kEnablePins = {9, 8, 7, 6};
-
 char pad_to_char(Pad pad) {
   switch (pad) {
     case Pad::A:
@@ -51,28 +42,16 @@ Max328Router::Max328Router()
       enable_mask_(kEnableAll) {}
 
 void Max328Router::begin() {
-  pinMode(kChipLPlus.a0, OUTPUT);
-  pinMode(kChipLPlus.a1, OUTPUT);
-  pinMode(kChipLPlus.a2, OUTPUT);
-
-  pinMode(kChipLMinus.a0, OUTPUT);
-  pinMode(kChipLMinus.a1, OUTPUT);
-  pinMode(kChipLMinus.a2, OUTPUT);
-
-  pinMode(kChipVPlus.a0, OUTPUT);
-  pinMode(kChipVPlus.a1, OUTPUT);
-  pinMode(kChipVPlus.a2, OUTPUT);
-
-  pinMode(kChipVMinus.a0, OUTPUT);
-  pinMode(kChipVMinus.a1, OUTPUT);
-  pinMode(kChipVMinus.a2, OUTPUT);
-
-  if (kUseEnablePins) {
-    pinMode(kEnablePins.ip, OUTPUT);
-    pinMode(kEnablePins.im, OUTPUT);
-    pinMode(kEnablePins.vp, OUTPUT);
-    pinMode(kEnablePins.vm, OUTPUT);
+  if (!mcp_.begin_I2C(kMcpAddress)) {
+    Serial.println("ERROR: MCP23017 not found at 0x20");
+    return;
   }
+
+  // Set all 16 pins as OUTPUT and LOW
+  for (uint8_t i = 0; i < 16; i++) {
+    mcp_.pinMode(i, OUTPUT);
+  }
+  mcp_.writeGPIOAB(0x0000);
 
   apply_enable_mask();
 }
@@ -81,20 +60,14 @@ void Max328Router::apply_state(const RouterState &state, uint8_t cfg_id) {
   state_ = state;
   cfg_id_ = cfg_id;
 
-  if (kUseEnablePins) {
-    uint8_t prev_mask = enable_mask_;
-    enable_mask_ = 0;
-    apply_enable_mask();
-    delay(1);
-    enable_mask_ = prev_mask;
-  }
+  // Disable all chips, set addresses, then re-enable
+  uint8_t prev_mask = enable_mask_;
+  enable_mask_ = 0;
+  write_all();
+  delay(1);
+  enable_mask_ = prev_mask;
 
-  set_chip(kChipLPlus, state.ip);
-  set_chip(kChipLMinus, state.im);
-  set_chip(kChipVPlus, state.vp);
-  set_chip(kChipVMinus, state.vm);
-
-  apply_enable_mask();
+  write_all();
   delay(kSettleDelayMs);
 }
 
@@ -104,9 +77,9 @@ uint8_t Max328Router::cfg_id() const { return cfg_id_; }
 
 void Max328Router::set_chip(const ChipPins &pins, Pad pad) {
   uint8_t value = static_cast<uint8_t>(pad);
-  digitalWrite(pins.a0, (value & 0x01) ? HIGH : LOW);
-  digitalWrite(pins.a1, (value & 0x02) ? HIGH : LOW);
-  digitalWrite(pins.a2, (value & 0x04) ? HIGH : LOW);
+  mcp_.digitalWrite(pins.a0, (value & 0x01) ? HIGH : LOW);
+  mcp_.digitalWrite(pins.a1, (value & 0x02) ? HIGH : LOW);
+  mcp_.digitalWrite(pins.a2, (value & 0x04) ? HIGH : LOW);
 }
 
 void Max328Router::set_enable_mask(uint8_t mask) {
@@ -117,19 +90,30 @@ void Max328Router::set_enable_mask(uint8_t mask) {
 uint8_t Max328Router::enable_mask() const { return enable_mask_; }
 
 void Max328Router::apply_enable_mask() {
-  if (!kUseEnablePins) {
-    return;
-  }
+  mcp_.digitalWrite(kU1Pins.en, (enable_mask_ & kEnableIp) ? HIGH : LOW);
+  mcp_.digitalWrite(kU2Pins.en, (enable_mask_ & kEnableIm) ? HIGH : LOW);
+  mcp_.digitalWrite(kU3Pins.en, (enable_mask_ & kEnableVp) ? HIGH : LOW);
+  mcp_.digitalWrite(kU4Pins.en, (enable_mask_ & kEnableVm) ? HIGH : LOW);
+}
 
-  auto to_level = [](bool enabled) -> uint8_t {
-    if (kEnableActiveHigh) {
-      return enabled ? HIGH : LOW;
-    }
-    return enabled ? LOW : HIGH;
+void Max328Router::write_all() {
+  // Build the full 16-bit port value and write in one I2C transaction
+  uint16_t port_value = 0;
+
+  auto set_bits = [&](const ChipPins &pins, Pad pad, bool enabled) {
+    uint8_t value = static_cast<uint8_t>(pad);
+    if (enabled) port_value |= (1 << pins.en);
+    if (value & 0x01) port_value |= (1 << pins.a0);
+    if (value & 0x02) port_value |= (1 << pins.a1);
+    if (value & 0x04) port_value |= (1 << pins.a2);
   };
 
-  digitalWrite(kEnablePins.ip, to_level(enable_mask_ & kEnableIp));
-  digitalWrite(kEnablePins.im, to_level(enable_mask_ & kEnableIm));
-  digitalWrite(kEnablePins.vp, to_level(enable_mask_ & kEnableVp));
-  digitalWrite(kEnablePins.vm, to_level(enable_mask_ & kEnableVm));
+  set_bits(kU1Pins, state_.ip, enable_mask_ & kEnableIp);
+  set_bits(kU2Pins, state_.im, enable_mask_ & kEnableIm);
+  set_bits(kU3Pins, state_.vp, enable_mask_ & kEnableVp);
+  set_bits(kU4Pins, state_.vm, enable_mask_ & kEnableVm);
+
+  mcp_.writeGPIOAB(port_value);
 }
+
+Adafruit_MCP23X17 &Max328Router::mcp() { return mcp_; }
