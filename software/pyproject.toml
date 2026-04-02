@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "openpauw"
+version = "0.1.0"
+description = "Van der Pauw measurement software for the OpenPauw hardware platform"
+authors = ["Nanosystems Lab <nslab@hawaii.edu>"]
+license = "GPL-3.0"
+packages = [{include = "openpauw", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10, <4.0"
+pyserial = ">=3.5"
+pykeithley_dmm6500 = {git = "https://github.com/nanosystemslab/pykeithley_dmm6500.git"}
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=7.0"
+
+[tool.poetry.scripts]
+openpauw = "openpauw.__main__:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
