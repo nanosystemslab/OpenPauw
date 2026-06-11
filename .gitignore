@@ -34,6 +34,21 @@ Desktop.ini
 *.swo
 *~
 
+# kibuilder intermediates — regenerated every Build guide.
+# The final stage JPGs and PDF *are* tracked (they're what the README embeds);
+# only the per-component renders and cumulative-board scratch get ignored.
+cad/media/assembly/_components/
+cad/media/assembly/_cum/
+
+# kicad-cli temp PCB copies left by interrupted renders
+tmp*.kicad_pcb
+tmp*.kicad_pro
+
+# Python build artifacts (in case anyone iterates the host driver here)
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
 # Downloaded component files (optional - uncomment if you don't want to track these)
 *.zip
 

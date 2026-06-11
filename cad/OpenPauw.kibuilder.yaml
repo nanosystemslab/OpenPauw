@@ -1,0 +1,187 @@
+project:
+  pcb: /Users/michaelnakamura/Desktop/OpenPauw/cad/OpenPauw.kicad_pcb
+  output: media/assembly
+  step_search_paths:
+  - /Applications/KiCad/KiCad.app/Contents/SharedSupport/3dmodels
+  - /Users/michaelnakamura/Desktop/OpenPauw/cad/footprints
+components:
+  CP_Radial_D10.0mm:
+    step: Capacitor_THT.3dshapes/CP_Radial_D10.0mm_P5.00mm.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  PinHeader_1x08:
+    step: Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x08_P2.54mm_Vertical.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  DIP-16_W7.62mm_Socket:
+    step: Package_DIP.3dshapes/DIP-16_W7.62mm_Socket.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  DIP-16_W7.62mm:
+    step: Package_DIP.3dshapes/DIP-16_W7.62mm.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  Banana_Cliff_black:
+    step: footprints/3dmodels/Banana_Cliff_black.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  L_Radial_D7.5mm:
+    step: Inductor_THT.3dshapes/L_Radial_D7.5mm_P5.00mm_Fastron_07P.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  5346-MCP23017-Expander:
+    step: footprints/Adafruit-MCP23017.pretty/5346-MCP23017-Expander.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  PinSocket_1x13:
+    step: Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x13_P2.54mm_Vertical.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  PinHeader_1x04:
+    step: Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x04_P2.54mm_Vertical.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  PinHeader_1x12:
+    step: Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x12_P2.54mm_Vertical.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  JST_B4B-PH-SM4-TB:
+    step: footprints/3dmodels/JST_B4B-PH-SM4-TB.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  Banana_Cliff_red:
+    step: footprints/3dmodels/Banana_Cliff_red.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  SOT-23-5:
+    step: Package_TO_SOT_SMD.3dshapes/SOT-23-5.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  R_Axial_DIN0207_L6.3mm_D2.5mm:
+    step: Resistor_THT.3dshapes/R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  4884_Feather_RP2040:
+    step: footprints/Adafruit-RP2040-KiCAD/4884 Feather RP2040.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  PinSocket_1x16:
+    step: Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x16_P2.54mm_Vertical.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  PinSocket_1x12:
+    step: Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x12_P2.54mm_Vertical.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  D_SMA:
+    step: Diode_SMD.3dshapes/D_SMA.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+  PinHeader_1x07:
+    step: Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x07_P2.54mm_Vertical.step
+    rot_x: 0.0
+    rot_y: 0.0
+    rot_z: 0.0
+stages:
+- n: 1
+  title: Bare PCB
+  sub: 'Inspect: no shorts, silkscreen legible.'
+  parts: []
+- n: 2
+  title: SMD parts
+  sub: "~1.9 mm tall:  SOT-23-5 \xB7 D_SMA"
+  parts:
+  - key: SOT-23-5
+    qty: 1
+    label: SOT-23-5
+  - key: D_SMA
+    qty: 1
+    label: D_SMA
+- n: 3
+  title: Sockets & pin headers
+  sub: "~6.8 mm tall:  R_Axial_DIN0207_L6.3mm_D2.5mm \xB7 DIP-16_W7.62mm \xB7 JST_B4B-PH-SM4-TB\
+    \ \xB7 DIP-16_W7.62mm_Socket"
+  parts:
+  - key: R_Axial_DIN0207_L6.3mm_D2.5mm
+    qty: 1
+    label: R_Axial_DIN0207_L6.3mm_D2.5mm
+  - key: JST_B4B-PH-SM4-TB
+    qty: 1
+    label: JST_B4B-PH-SM4-TB
+  - key: DIP-16_W7.62mm_Socket
+    qty: 1
+    label: DIP-16_W7.62mm_Socket
+- n: 4
+  title: Inductors & small caps
+  sub: "~11.6 mm tall:  PinHeader_1x04 \xB7 PinHeader_1x08 \xB7 PinHeader_1x07 \xB7\
+    \ PinHeader_1x12 \xB7 PinSocket_1x13 \xB7 PinSocket_1x12 \xB7 PinSocket_1x16 \xB7\
+    \ CP_Radial_D10.0mm"
+  parts:
+  - key: PinHeader_1x04
+    qty: 1
+    label: PinHeader_1x04
+  - key: PinHeader_1x08
+    qty: 1
+    label: PinHeader_1x08
+  - key: PinHeader_1x07
+    qty: 1
+    label: PinHeader_1x07
+  - key: PinHeader_1x12
+    qty: 1
+    label: PinHeader_1x12
+  - key: PinSocket_1x13
+    qty: 1
+    label: PinSocket_1x13
+  - key: PinSocket_1x12
+    qty: 1
+    label: PinSocket_1x12
+  - key: PinSocket_1x16
+    qty: 1
+    label: PinSocket_1x16
+  - key: CP_Radial_D10.0mm
+    qty: 1
+    label: CP_Radial_D10.0mm
+- n: 5
+  title: Large capacitors / connectors
+  sub: "~15.8 mm tall:  L_Radial_D7.5mm \xB7 Banana_Cliff_black \xB7 Banana_Cliff_red"
+  parts:
+  - key: L_Radial_D7.5mm
+    qty: 1
+    label: L_Radial_D7.5mm
+  - key: Banana_Cliff_black
+    qty: 1
+    label: Banana_Cliff_black
+  - key: Banana_Cliff_red
+    qty: 1
+    label: Banana_Cliff_red
+- n: 6
+  title: Daughterboards
+  sub: "Seat boards onto their headers last:  5346-MCP23017-Expander \xB7 4884_Feather_RP2040"
+  parts:
+  - key: 5346-MCP23017-Expander
+    qty: 1
+    label: 5346-MCP23017-Expander
+  - key: 4884_Feather_RP2040
+    qty: 1
+    label: 4884_Feather_RP2040
+  - key: DIP-16_W7.62mm
+    qty: 1
+    label: DIP-16_W7.62mm
