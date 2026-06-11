@@ -416,4 +416,37 @@
 		(uuid "3d05a595-dd70-407f-be4c-afc136f98c64")
 	)
 	(embedded_fonts no)
+	(model "${KIPRJMOD}/footprints/Adafruit-RP2040-KiCAD/4884 Feather RP2040.step"
+		(offset
+			(xyz -25.4 -11.43 8.89)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+	(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x16_P2.54mm_Vertical.step"
+		(offset
+			(xyz -19.05 -10.16 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 -90)
+		)
+	)
+	(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x12_P2.54mm_Vertical.step"
+		(offset
+			(xyz -8.89 10.16 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 -90)
+		)
+	)
 )

@@ -6,4 +6,5 @@
   (lib (name "Adafruit-Feather-RP2040")(type "KiCad")(uri "${KIPRJMOD}/footprints/Adafruit-RP2040-KiCAD/Adafruit-Feather-RP2040.kicad_sym")(options "")(descr ""))
   (lib (name "New_Library")(type "KiCad")(uri "${KIPRJMOD}/footprints/Adafruit-MCP23017/New_Library.kicad_sym")(options "")(descr ""))
   (lib (name "Adafruit-MCP23017")(type "KiCad")(uri "${KIPRJMOD}/footprints/Adafruit-MCP23017/Adafruit-MCP23017.kicad_sym")(options "")(descr ""))
+  (lib (name "JST_Shielded")(type "KiCad")(uri "${KIPRJMOD}/symbols/JST_Shielded.kicad_sym")(options "")(descr "JST PH SMD shielded connectors"))
 )

@@ -7345,7 +7345,7 @@
 		)
 	)
 	(symbol
-		(lib_id "Connector_Generic:Conn_01x04")
+		(lib_id "JST_Shielded:B4B-PH-SM4-TB")
 		(at 256.54 63.5 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -7363,7 +7363,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Conn_01x04"
+		(property "Value" "B4B-PH-SM4-TB"
 			(at 259.08 66.0399 0)
 			(effects
 				(font
@@ -7372,7 +7372,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_JST:JST_PH_B4B-PH-SM4-TB_1x04-1MP_P2.00mm_Vertical"
+		(property "Footprint" "JST_Shielded:JST_B4B-PH-SM4-TB"
 			(at 256.54 63.5 0)
 			(effects
 				(font
@@ -7410,6 +7410,12 @@
 		)
 		(pin "4"
 			(uuid "ccf7b297-52d4-4740-bcd9-d44e1cc4c347")
+		)
+		(pin "SH1"
+			(uuid "b4a8f001-cc0c-4c0c-9d33-1aa5b46d0001")
+		)
+		(pin "SH2"
+			(uuid "b4a8f001-cc0c-4c0c-9d33-1aa5b46d0002")
 		)
 		(instances
 			(project ""

@@ -2,4 +2,5 @@
   (version 7)
   (lib (name "Library")(type "KiCad")(uri "${KIPRJMOD}/footprints/Library.pretty")(options "")(descr ""))
   (lib (name "Adafruit-MCP23017")(type "KiCad")(uri "${KIPRJMOD}/footprints/Adafruit-MCP23017.pretty")(options "")(descr ""))
+  (lib (name "JST_Shielded")(type "KiCad")(uri "${KIPRJMOD}/footprints/JST_Shielded.pretty")(options "")(descr "JST PH SMD shielded footprints"))
 )

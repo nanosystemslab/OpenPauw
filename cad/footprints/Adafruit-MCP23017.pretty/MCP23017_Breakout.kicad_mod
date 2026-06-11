@@ -299,4 +299,37 @@
 		(uuid "3149acdd-0115-47f3-a6fe-de2922df6b5d")
 	)
 	(embedded_fonts no)
+	(model "${KIPRJMOD}/footprints/Adafruit-MCP23017.pretty/5346-MCP23017-Expander.step"
+		(offset
+			(xyz -22.93 -8.86 8.89)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+	(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x13_P2.54mm_Vertical.step"
+		(offset
+			(xyz -16.51 -6.35 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 -90)
+		)
+	)
+	(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x13_P2.54mm_Vertical.step"
+		(offset
+			(xyz -16.51 6.35 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 -90)
+		)
+	)
 )

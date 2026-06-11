@@ -2946,6 +2946,17 @@
 				(xyz 0 0 0)
 			)
 		)
+		(model "${KICAD9_3DMODEL_DIR}/Package_DIP.3dshapes/DIP-16_W7.62mm.step"
+			(offset
+				(xyz 0 0 4)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 0)
+			)
+		)
 	)
 	(footprint "Connector:Banana_Cliff_FCR7350B_S16N-PC_Horizontal"
 		(layer "F.Cu")
@@ -3211,7 +3222,7 @@
 			(uuid "9cc0e204-4b43-40d2-b2f6-55c5eb84831e")
 		)
 		(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Connector.3dshapes/Banana_Cliff_FCR7350B_S16N-PC_Horizontal.step"
+		(model "${KIPRJMOD}/footprints/3dmodels/Banana_Cliff_black.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -4294,6 +4305,17 @@
 				(xyz 0 0 0)
 			)
 		)
+		(model "${KICAD9_3DMODEL_DIR}/Package_DIP.3dshapes/DIP-16_W7.62mm.step"
+			(offset
+				(xyz 0 0 4)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 0)
+			)
+		)
 	)
 	(footprint "Adafruit-MCP23017:MCP23017_Breakout"
 		(layer "F.Cu")
@@ -4672,6 +4694,39 @@
 			(uuid "e3a37831-2b3c-470b-bd68-4c23712c7bfe")
 		)
 		(embedded_fonts no)
+		(model "${KIPRJMOD}/footprints/Adafruit-MCP23017.pretty/5346-MCP23017-Expander.step"
+			(offset
+				(xyz -22.93 -8.86 8.89)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 0)
+			)
+		)
+		(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x13_P2.54mm_Vertical.step"
+			(offset
+				(xyz -16.51 -6.35 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 -90)
+			)
+		)
+		(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x13_P2.54mm_Vertical.step"
+			(offset
+				(xyz -16.51 6.35 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 -90)
+			)
+		)
 	)
 	(footprint "Package_DIP:DIP-16_W7.62mm_Socket_LongPads"
 		(layer "F.Cu")
@@ -5079,6 +5134,17 @@
 		(model "${KICAD9_3DMODEL_DIR}/Package_DIP.3dshapes/DIP-16_W7.62mm_Socket.step"
 			(offset
 				(xyz 0 0 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 0)
+			)
+		)
+		(model "${KICAD9_3DMODEL_DIR}/Package_DIP.3dshapes/DIP-16_W7.62mm.step"
+			(offset
+				(xyz 0 0 4)
 			)
 			(scale
 				(xyz 1 1 1)
@@ -5668,12 +5734,12 @@
 			)
 		)
 	)
-	(footprint "Connector_JST:JST_PH_B4B-PH-SM4-TB_1x04-1MP_P2.00mm_Vertical"
+	(footprint "JST_Shielded:JST_B4B-PH-SM4-TB"
 		(layer "F.Cu")
 		(uuid "883f8445-1742-4963-bfe0-c19ba63a738c")
 		(at 134.33 36.12 180)
-		(descr "JST PH series connector, B4B-PH-SM4-TB (http://www.jst-mfg.com/product/pdf/eng/ePH.pdf), generated with kicad-footprint-generator")
-		(tags "connector JST PH vertical")
+		(descr "JST PH SMD shielded 4-pin connector (B4B-PH-SM4-TB) with shield ground pads SH1/SH2")
+		(tags "connector JST PH SMD shielded vertical")
 		(property "Reference" "J5"
 			(at -7.74 1.22 180)
 			(layer "F.SilkS")
@@ -5685,7 +5751,7 @@
 				)
 			)
 		)
-		(property "Value" "Conn_01x04"
+		(property "Value" "B4B-PH-SM4-TB"
 			(at 9.85 2.31 180)
 			(layer "F.Fab")
 			(uuid "53c0aea2-7c3d-48a1-a8c4-bfa5d1f0e227")
@@ -6120,30 +6186,36 @@
 			(pintype "passive")
 			(uuid "6d730aa9-ccc7-45e4-a278-fb94e2f79765")
 		)
-		(pad "MP" smd roundrect
+		(pad "SH1" smd roundrect
 			(at -5.4 -1.75 180)
 			(size 1.6 3)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.15625)
+			(net 1 "GND")
+			(pinfunction "Shield")
+			(pintype "passive")
 			(uuid "e6c6ceb6-defb-40e3-b1a3-eea6a44f424b")
 		)
-		(pad "MP" smd roundrect
+		(pad "SH2" smd roundrect
 			(at 5.4 -1.75 180)
 			(size 1.6 3)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(roundrect_rratio 0.15625)
+			(net 1 "GND")
+			(pinfunction "Shield")
+			(pintype "passive")
 			(uuid "689cc602-7f15-44db-bf06-38ae00597152")
 		)
 		(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Connector_JST.3dshapes/JST_PH_B4B-PH-SM4-TB_1x04-1MP_P2.00mm_Vertical.step"
+		(model "${KIPRJMOD}/footprints/3dmodels/JST_B4B-PH-SM4-TB.step"
 			(offset
-				(xyz 0 0 0)
+				(xyz 0 1.75 0)
 			)
 			(scale
 				(xyz 1 1 1)
 			)
 			(rotate
-				(xyz 0 0 0)
+				(xyz -90 0 0)
 			)
 		)
 	)
@@ -6561,6 +6633,17 @@
 				(xyz 0 0 0)
 			)
 		)
+		(model "${KICAD9_3DMODEL_DIR}/Package_DIP.3dshapes/DIP-16_W7.62mm.step"
+			(offset
+				(xyz 0 0 4)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 0)
+			)
+		)
 	)
 	(footprint "Connector:Banana_Cliff_FCR7350B_S16N-PC_Horizontal"
 		(layer "F.Cu")
@@ -6826,7 +6909,7 @@
 			(uuid "6862a8d5-41f8-4b0f-84e9-4e455fc62910")
 		)
 		(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Connector.3dshapes/Banana_Cliff_FCR7350B_S16N-PC_Horizontal.step"
+		(model "${KIPRJMOD}/footprints/3dmodels/Banana_Cliff_red.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -7102,7 +7185,7 @@
 			(uuid "ec0f2fe7-ec08-4896-ae3a-e6c38a83e716")
 		)
 		(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Connector.3dshapes/Banana_Cliff_FCR7350B_S16N-PC_Horizontal.step"
+		(model "${KIPRJMOD}/footprints/3dmodels/Banana_Cliff_black.step"
 			(offset
 				(xyz 0 0 0)
 			)
@@ -12833,6 +12916,28 @@
 				(xyz -0 -0 -0)
 			)
 		)
+		(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x16_P2.54mm_Vertical.step"
+			(offset
+				(xyz -19.05 -10.16 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 -90)
+			)
+		)
+		(model "${KICAD9_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x12_P2.54mm_Vertical.step"
+			(offset
+				(xyz -8.89 10.16 0)
+			)
+			(scale
+				(xyz 1 1 1)
+			)
+			(rotate
+				(xyz 0 0 -90)
+			)
+		)
 	)
 	(footprint "Diode_SMD:D_SMA_Handsoldering"
 		(layer "F.Cu")
@@ -13879,7 +13984,7 @@
 			(uuid "735c4eb6-8fb1-4fc1-84c4-97970c7fa2fa")
 		)
 		(embedded_fonts no)
-		(model "${KICAD9_3DMODEL_DIR}/Connector.3dshapes/Banana_Cliff_FCR7350B_S16N-PC_Horizontal.step"
+		(model "${KIPRJMOD}/footprints/3dmodels/Banana_Cliff_red.step"
 			(offset
 				(xyz 0 0 0)
 			)

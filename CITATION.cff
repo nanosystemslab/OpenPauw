@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use OpenPauw in your work, please cite it as below."
+title: "OpenPauw: an open-source Van der Pauw measurement system"
+abstract: >-
+  A complete hardware, firmware, and software stack for automated four-terminal
+  Van der Pauw sheet-resistance and resistivity measurements: a custom KiCAD
+  analog-switching board (MAX328 multiplexers driven over I2C), C++ firmware for
+  the Adafruit Feather RP2040, and a Python host driver for a Keithley DMM6500.
+type: software
+authors:
+  - family-names: Nakamura
+    given-names: Matthew
+    affiliation: "Nanosystems Lab, University of Hawaiʻi at Mānoa"
+repository-code: "https://github.com/nanosystemslab/OpenPauw"
+license: GPL-3.0
+version: "1.3.0"
+date-released: "2026-02-06"
+keywords:
+  - van-der-pauw
+  - sheet-resistance
+  - resistivity
+  - instrumentation
+  - rp2040
+  - kicad
+  - embedded
