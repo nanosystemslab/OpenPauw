@@ -200,7 +200,12 @@ Functional single-author research instrument. Firmware is at v2.0.0 (MCP23017-ba
 
 ## Tooling
 
+<a href="https://github.com/mattnakamura/kibuilder"><img src="https://raw.githubusercontent.com/mattnakamura/kibuilder/main/resources/icon_1024.png" alt="kibuilder" width="72" align="left"></a>
+
 The step-by-step assembly guide ([`cad/ASSEMBLY.md`](cad/ASSEMBLY.md), the per-stage renders in [`cad/media/assembly/`](cad/media/assembly/), and the printable PDF) is generated automatically from the KiCAD board by **[kibuilder](https://github.com/mattnakamura/kibuilder)** — an open-source tool (also developed in this lab) that turns any `.kicad_pcb` into a visual, stage-by-stage build guide using OpenCASCADE part renders and `kicad-cli` board renders.
+
+<br clear="left">
+
 
 If you reuse those generated assembly assets, please cite kibuilder alongside OpenPauw (see [CITATION.cff](CITATION.cff)).
 
