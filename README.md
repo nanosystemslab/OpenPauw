@@ -2,6 +2,7 @@
 
 **An open-source Van der Pauw measurement system, built end to end:** a custom KiCAD analog-switching board, embedded C++ firmware on an RP2040, and a Python host driver that automates four-terminal sheet-resistance and resistivity measurements.
 
+[![DOI](https://zenodo.org/badge/1103392749.svg)](https://doi.org/10.5281/zenodo.20683361)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 ![MCU: RP2040](https://img.shields.io/badge/MCU-RP2040-c51a4a)
 ![Firmware: v2.0.0](https://img.shields.io/badge/firmware-v2.0.0-success)
@@ -217,7 +218,9 @@ If you use OpenPauw in your work, please cite it using the metadata in [CITATION
 
 Released under the **GNU General Public License v3.0** — see [LICENSE](LICENSE).
 
-## Author
+## Authors
 
-**Matthew Nakamura** — [Nanosystems Lab](https://github.com/nanosystemslab), University of Hawaiʻi at Mānoa.
+- **Matthew Nakamura** — [Nanosystems Lab](https://github.com/nanosystemslab), University of Hawaiʻi at Mānoa.
+- **Kailer Okura** — [Nanosystems Lab](https://github.com/nanosystemslab), University of Hawaiʻi at Mānoa.
+
 Contact: `nslab@hawaii.edu`

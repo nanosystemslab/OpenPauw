@@ -11,10 +11,21 @@ authors:
   - family-names: Nakamura
     given-names: Matthew
     affiliation: "Nanosystems Lab, University of Hawaiʻi at Mānoa"
+  - family-names: Okura
+    given-names: Kailer
+    affiliation: "Nanosystems Lab, University of Hawaiʻi at Mānoa"
 repository-code: "https://github.com/nanosystemslab/OpenPauw"
 license: GPL-3.0
 version: "1.4.0"
 date-released: "2026-06-13"
+doi: 10.5281/zenodo.20683361
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.20683361
+    description: "Concept DOI — always resolves to the latest version"
+  - type: doi
+    value: 10.5281/zenodo.20683362
+    description: "Version DOI for v1.4.0"
 keywords:
   - van-der-pauw
   - sheet-resistance
@@ -32,4 +43,5 @@ references:
         affiliation: "Nanosystems Lab, University of Hawaiʻi at Mānoa"
     repository-code: "https://github.com/mattnakamura/kibuilder"
     license: GPL-3.0-or-later
+    doi: 10.5281/zenodo.20683351
     notes: "Used to generate the OpenPauw assembly guide (cad/ASSEMBLY.md)."

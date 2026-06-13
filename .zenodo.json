@@ -8,6 +8,10 @@
     {
       "name": "Nakamura, Matthew",
       "affiliation": "Nanosystems Lab, University of Hawaiʻi at Mānoa"
+    },
+    {
+      "name": "Okura, Kailer",
+      "affiliation": "Nanosystems Lab, University of Hawaiʻi at Mānoa"
     }
   ],
   "keywords": [
@@ -22,8 +26,8 @@
   "related_identifiers": [
     {
       "relation": "references",
-      "identifier": "https://github.com/mattnakamura/kibuilder",
-      "scheme": "url"
+      "identifier": "10.5281/zenodo.20683351",
+      "scheme": "doi"
     }
   ]
 }
