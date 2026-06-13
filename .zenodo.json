@@ -1,0 +1,29 @@
+{
+  "title": "OpenPauw: an open-source Van der Pauw measurement system",
+  "description": "<p>A complete hardware, firmware, and software stack for automated four-terminal Van der Pauw sheet-resistance and resistivity measurements: a custom KiCAD analog-switching board (MAX328 multiplexers driven over I2C via an MCP23017 I/O expander), C++ firmware for the Adafruit Feather RP2040, and a Python host driver for a Keithley DMM6500. The board's assembly guide is generated with kibuilder.</p>",
+  "upload_type": "software",
+  "license": "GPL-3.0",
+  "access_right": "open",
+  "creators": [
+    {
+      "name": "Nakamura, Matthew",
+      "affiliation": "Nanosystems Lab, University of Hawaiʻi at Mānoa"
+    }
+  ],
+  "keywords": [
+    "van-der-pauw",
+    "sheet-resistance",
+    "resistivity",
+    "instrumentation",
+    "rp2040",
+    "kicad",
+    "embedded"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "references",
+      "identifier": "https://github.com/mattnakamura/kibuilder",
+      "scheme": "url"
+    }
+  ]
+}

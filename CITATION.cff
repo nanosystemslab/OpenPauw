@@ -13,8 +13,8 @@ authors:
     affiliation: "Nanosystems Lab, University of Hawaiʻi at Mānoa"
 repository-code: "https://github.com/nanosystemslab/OpenPauw"
 license: GPL-3.0
-version: "1.3.0"
-date-released: "2026-02-06"
+version: "1.4.0"
+date-released: "2026-06-13"
 keywords:
   - van-der-pauw
   - sheet-resistance
@@ -23,3 +23,13 @@ keywords:
   - rp2040
   - kicad
   - embedded
+references:
+  - type: software
+    title: "kibuilder: visual step-by-step assembly guides from KiCAD PCBs"
+    authors:
+      - family-names: Nakamura
+        given-names: Matthew
+        affiliation: "Nanosystems Lab, University of Hawaiʻi at Mānoa"
+    repository-code: "https://github.com/mattnakamura/kibuilder"
+    license: GPL-3.0-or-later
+    notes: "Used to generate the OpenPauw assembly guide (cad/ASSEMBLY.md)."
