@@ -14,7 +14,7 @@
 
 The [Van der Pauw method](https://en.wikipedia.org/wiki/Van_der_Pauw_method) measures the sheet resistance of a thin, arbitrarily shaped sample using four contacts on its perimeter. Getting a good measurement requires driving current through one pair of contacts while sensing voltage across another, then cycling current and voltage through every contact permutation and averaging — tedious and error-prone to rewire by hand.
 
-OpenPauw automates that cycling. A custom switching board routes a current source and a voltmeter to the right contacts for each of the four canonical configurations; firmware on an Adafruit Feather RP2040 drives the analog switches over a simple serial protocol; and a Python package orchestrates the full sequence, reads the voltmeter, and computes sheet resistance (and resistivity, given a film thickness).
+OpenPauw automates that cycling. A custom switching board routes a source-measure unit's force (current) and sense (voltage) pairs to the right contacts for each of the four canonical configurations; firmware on an Adafruit Feather RP2040 drives the analog switches over a simple serial protocol; and a Python package programs the SMU, orchestrates the full sequence, and computes sheet resistance (and resistivity, given a film thickness).
 
 The whole stack — PCB, firmware, and software — lives in this repository.
 
@@ -33,27 +33,26 @@ flowchart LR
         MUX["4 × MAX328EPE+<br/>8:1 analog muxes<br/>(I+, I−, V+, V−)"]
         BOOST["LMR62421<br/>5 V → +15 V boost"]
     end
-    ISRC["Constant<br/>current source"]
-    DMM["Keithley DMM6500"]
+    SMU["Keithley 2450 SourceMeter<br/>(4-wire: force + sense)"]
     SAMPLE["4-contact sample<br/>(pads A–D)"]
 
     PY -- "USB serial @ 115200<br/>ASCII command protocol" --> MCU
-    PY -- "Ethernet / SCPI :5025" --> DMM
+    PY -- "Ethernet / TSP :5025" --> SMU
     MCU -- "I²C (SDA=GP2, SCL=GP3)" --> IOX
     IOX -- "address + enable lines" --> MUX
     BOOST -- "+15 V rail" --> MUX
-    ISRC -- "I+ / I−" --> MUX
-    DMM -- "V+ / V−" --> MUX
+    SMU -- "FORCE HI/LO → I+ / I−" --> MUX
+    SMU -- "SENSE HI/LO → V+ / V−" --> MUX
     MUX -- "switched 4-terminal contact set" --> SAMPLE
 ```
 
-**Signal flow:** the Python host sends a configuration command (`CFG 1`–`CFG 4`) over USB serial → the RP2040 translates it to address and enable signals → those reach the MAX328 multiplexers through an MCP23017 I²C I/O expander → each multiplexer connects its terminal (I+, I−, V+, V−) to the correct sample pad → the host triggers the DMM6500 over Ethernet to read the resulting voltage → the host repeats for all four configurations and computes sheet resistance.
+**Signal flow:** the Python host sends a configuration command (`CFG 1`–`CFG 4`) over USB serial → the RP2040 translates it to address and enable signals → those reach the MAX328 multiplexers through an MCP23017 I²C I/O expander → each multiplexer connects its terminal (I+, I−, V+, V−) to the correct sample pad → the host triggers the Keithley 2450 over Ethernet, which sources current through I+/I− and reads the sample voltage on V+/V− in one 4-wire operation → the host repeats for all four configurations and computes sheet resistance.
 
 | Layer | Directory | Tech |
 |-------|-----------|------|
 | Hardware | [`cad/`](cad/) | KiCAD PCB, 4× MAX328EPE+ analog muxes, MCP23017, LMR62421 boost |
 | Firmware | [`firmware/`](firmware/) | C++ / Arduino (Earle Philhower RP2040 core), PlatformIO |
-| Software | [`software/`](software/) | Python 3.10+, `pyserial`, Keithley DMM6500 driver |
+| Software | [`software/`](software/) | Python 3.10+, `pyserial`, Keithley 2450 SourceMeter driver |
 | Docs | [`docs/`](docs/) | Design notes, debug/test plan, validation procedures |
 
 ## Hardware (`cad/`)
@@ -64,7 +63,7 @@ A custom KiCAD board that switches a four-terminal contact set for Van der Pauw 
 - **Isolation.** The isolation here is **switch-level / inter-terminal isolation**: an unselected `S` leg is an open switch, so pads that aren't part of the active configuration — and the four terminals relative to one another — stay electrically isolated during a measurement. (See *Build-Up Test 3 — Inter-Terminal Isolation* in [`docs/Debug_Test_Plan.md`](docs/Debug_Test_Plan.md).) The board uses a single shared ground plane and a unipolar 0–15 V analog range; it does **not** provide galvanic/optical isolation from the host or mains.
 - **Power.** An **LMR62421** boost converter generates a **+15 V** rail from the Feather's 5 V USB input to supply the MAX328 `V+` pins; `V−` on all switches is tied to ground (unipolar operation).
 - **Control.** All MAX328 address and enable signals are driven by an **MCP23017** 16-bit I²C I/O expander (address `0x20`, SDA = GP2, SCL = GP3) rather than direct RP2040 GPIO, freeing the Feather's pins.
-- **Connectors.** `I+/I−/V+/V−` banana jacks (to the current source and DMM), and sample pads **A–D** for the device under test.
+- **Connectors.** `I+/I−/V+/V−` banana jacks (to the SMU's force and sense pairs), and sample pads **A–D** for the device under test.
 
 **Open it in KiCAD:** `cad/OpenPauw.kicad_pro`. The board uses a footprint-library submodule (see [Repository setup](#repository-setup)).
 **BOM / exact pin mapping:** see [`docs/Design_Notes.md`](docs/Design_Notes.md) for power domains, the MAX328 device assignment, and the LMR62421 boost design; the authoritative MCP23017 ↔ MAX328 pin map is in [`firmware/README.md`](firmware/README.md).
@@ -125,7 +124,7 @@ CFG 1/2 and CFG 3/4 are forward/reverse polarity pairs on perpendicular axes —
 
 ## Software (`software/`)
 
-A Python package (`openpauw`) that drives the board over USB serial and a **Keithley DMM6500** voltmeter over Ethernet (SCPI), runs the four-configuration sequence, and computes sheet resistance / resistivity.
+A Python package (`openpauw`) that drives the board over USB serial and a **Keithley 2450 SourceMeter** over Ethernet (TSP), runs the four-configuration sequence, and computes sheet resistance / resistivity. The SMU sources the test current and senses the sample voltage in 4-wire mode, so no separate current source or voltmeter is needed.
 
 **Install:**
 
@@ -139,31 +138,33 @@ pip install .          # or: pip install -e ".[dev]"
 ```bash
 openpauw ping                                             # PONG — board alive?
 openpauw version                                          # firmware version
-openpauw measure --dmm-ip 192.168.1.100 --current 100e-6  # full VDP measurement
-openpauw measure --dmm-ip 192.168.1.100 --current 100e-6 --output results.csv
+openpauw measure --smu-ip 192.168.1.100 --current 100e-6  # full VDP measurement
+openpauw measure --smu-ip 192.168.1.100 --current 100e-6 --output results.csv
 ```
 
-`measure` cycles all four configurations, reads the DMM for each, and prints/saves the horizontal and vertical resistances plus the computed sheet resistance. CSV columns: `timestamp, current_A, v1_V, v2_V, v3_V, v4_V, r_horizontal_ohm, r_vertical_ohm, sheet_resistance_ohm_sq, resistivity_ohm_cm`.
+`measure` programs the SMU, cycles all four configurations, reads the sample voltage for each, verifies the sourced current via readback, and prints/saves the horizontal and vertical resistances plus the computed sheet resistance. CSV columns: `timestamp, current_A, actual_current_A, v1_V, v2_V, v3_V, v4_V, r_horizontal_ohm, r_vertical_ohm, sheet_resistance_ohm_sq, resistivity_ohm_cm`.
 
 **Python API:**
 
 ```python
 from openpauw import OpenPauwBoard, VdpMeasurement
-from pykeithley_dmm6500 import DMM6500
+from pykeithley_smu2450 import SMU2450
 
-with OpenPauwBoard() as board, DMM6500("192.168.1.100") as dmm:
-    m = VdpMeasurement(board, dmm, current=100e-6)
-    m.configure_dmm(nplc=10)
+with OpenPauwBoard() as board, SMU2450("192.168.1.100") as smu:
+    m = VdpMeasurement(board, smu, current=100e-6)
+    m.configure_smu(nplc=10, voltage_limit=2.0)
     voltages, result = m.run()
     print(f"Sheet resistance: {result.sheet_resistance:.2f} ohm/sq")
     m.save_csv("results.csv", voltages, result)
 ```
 
-**Bench setup:** a constant-current source wired to the `I+/I−` jacks, the DMM6500 `HI/LO` inputs to the `V+/V−` jacks (DMM on the LAN, SCPI port 5025), and the sample's four contacts on pads A–D. The board auto-detects its serial port on most systems; override with `--port`. Dependencies (`pyserial`, the [`pykeithley_dmm6500`](https://github.com/nanosystemslab/pykeithley_dmm6500) driver) install automatically. Full CLI reference, an interactive REPL, and troubleshooting are in [`software/README.md`](software/README.md).
+**Bench setup:** the 2450's `FORCE HI/LO` wired to the `I+/I−` jacks, its `SENSE HI/LO` to the `V+/V−` jacks (SMU on the LAN with the TSP command set, port 5025), and the sample's four contacts on pads A–D. The board auto-detects its serial port on most systems; override with `--port`. Dependencies (`pyserial`, the [`pykeithley_smu2450`](https://github.com/nanosystemslab/pykeithley_smu2450) driver) install automatically. Full CLI reference, an interactive REPL, and troubleshooting are in [`software/README.md`](software/README.md).
 
 ## Validation
 
 [`docs/Validation.md`](docs/Validation.md) defines the procedures used to trust a result: switch-matrix integrity (`swtest`/`cfgtest`), a known-sample accuracy check (within 2 %), a reciprocity check (forward/reverse pairs agree within 2 %), repeatability (CV < 1 % over 10 runs), and current-linearity sweeps to catch Joule heating or non-ohmic contacts.
+
+These checks are automated: `openpauw calibrate --smu-ip <IP> --expected-rs <ohm/sq>` runs them all against a calibration sample and writes a pass/fail report to `calibration-logs/` (guided bench version: `software/scripts/calibrate.sh`). A browser GUI — `openpauw gui` — offers the same measurement and calibration workflow with live progress and PASS/FAIL badges.
 
 <!--
 TODO(visual): results plot. Capture a current-linearity or repeatability sweep to CSV
@@ -192,7 +193,7 @@ git submodule update --init --recursive   # pulls the Adafruit RP2040 KiCAD foot
 
 ## Status & roadmap
 
-Functional single-author research instrument. Firmware is at v2.0.0 (MCP23017-based control); the Python package automates the full four-configuration measurement against a Keithley DMM6500.
+Functional single-author research instrument. Firmware is at v2.0.0 (MCP23017-based control); the Python package automates the full four-configuration measurement against a Keithley 2450 SourceMeter (previously a bench supply + DMM6500 pair).
 
 - [x] ~~Add a PCB render to this README.~~ Done — see assembled iso above; full step-by-step renders live in [`cad/ASSEMBLY.md`](cad/ASSEMBLY.md) (auto-generated by kibuilder from the KiCAD project).
 - [ ] Add a sample measurement plot to this README (see the `TODO(visual)` marker below the Validation section).

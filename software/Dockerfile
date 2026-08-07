@@ -12,4 +12,7 @@ RUN poetry install --no-root --no-interaction
 COPY . .
 RUN poetry install --no-interaction
 
+# GUI port (openpauw gui --host 0.0.0.0)
+EXPOSE 8432
+
 CMD ["poetry", "run", "pytest", "tests/", "-v"]

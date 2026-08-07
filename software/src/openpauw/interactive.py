@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import cmd
 
-from pykeithley_dmm6500 import DMM6500
+from pykeithley_smu2450 import SMU2450
 
 from openpauw.board import OpenPauwBoard
 from openpauw.measurement import VdpMeasurement
@@ -19,14 +19,15 @@ class OpenPauwREPL(cmd.Cmd):
     def __init__(
         self,
         board: OpenPauwBoard,
-        dmm: DMM6500,
+        smu: SMU2450,
         current: float = 100e-6,
         settle_time: float = 0.3,
     ) -> None:
         super().__init__()
         self.board = board
-        self.dmm = dmm
-        self.measurement = VdpMeasurement(board, dmm, current, settle_time=settle_time)
+        self.smu = smu
+        self.measurement = VdpMeasurement(board, smu, current, settle_time=settle_time)
+        self.measurement.configure_smu()
         self._last_voltages: dict[int, float] | None = None
         self._last_result = None
 
@@ -59,13 +60,34 @@ class OpenPauwREPL(cmd.Cmd):
         except RuntimeError as e:
             print(f"Error: {e}")
 
+    def do_output(self, arg: str) -> None:
+        """Turn the SMU source output on or off: output <on|off>"""
+        state = arg.strip().lower()
+        if state == "on":
+            self.smu.output_on()
+            print("Output on")
+        elif state == "off":
+            self.smu.output_off()
+            print("Output off")
+        else:
+            print("Usage: output <on|off>")
+
     def do_read(self, _arg: str) -> None:
-        """Take a single DMM reading."""
+        """Take a single voltage reading (turn output on first)."""
         try:
-            v = self.dmm.measure()
+            v = self.smu.measure()
             print(f"Voltage: {v:.4e} V")
         except Exception as e:
             print(f"Error: {e}")
+
+    def do_current(self, _arg: str) -> None:
+        """Show programmed and readback source current."""
+        print(f"Programmed: {self.measurement.current:.4e} A")
+        try:
+            actual = self.measurement.read_source_current()
+            print(f"Readback:   {actual:.4e} A")
+        except Exception:
+            print("Readback:   unavailable (take a reading first)")
 
     def do_measure(self, _arg: str) -> None:
         """Run a full Van der Pauw measurement."""
@@ -76,6 +98,8 @@ class OpenPauwREPL(cmd.Cmd):
             self._last_result = result
             for cfg_id in range(1, 5):
                 print(f"  CFG {cfg_id}: {voltages[cfg_id]:.4e} V")
+            if self.measurement.actual_current is not None:
+                print(f"Source current: {self.measurement.actual_current:.4e} A")
             print(f"R_horizontal: {result.r_horizontal:.2f} ohm")
             print(f"R_vertical:   {result.r_vertical:.2f} ohm")
             print(f"R_sheet:      {result.sheet_resistance:.2f} ohm/sq")
@@ -106,6 +130,7 @@ class OpenPauwREPL(cmd.Cmd):
 
     def do_quit(self, _arg: str) -> bool:
         """Exit interactive mode."""
+        self.smu.output_off()
         return True
 
     do_exit = do_quit

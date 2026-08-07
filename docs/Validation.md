@@ -55,7 +55,7 @@ The Van der Pauw method relies on reciprocity — swapping current and voltage t
 Run a measurement and check:
 
 ```bash
-openpauw measure --dmm-ip <IP> --current 100e-6
+openpauw measure --smu-ip <IP> --current 100e-6
 ```
 
 Verify:
@@ -80,7 +80,7 @@ Run repeated measurements on the same sample without disturbing the contacts.
 ```bash
 # Run 10 measurements, saving all to CSV
 for i in $(seq 1 10); do
-    openpauw measure --dmm-ip <IP> --current 100e-6 --output repeatability.csv
+    openpauw measure --smu-ip <IP> --current 100e-6 --output repeatability.csv
 done
 ```
 
@@ -101,10 +101,10 @@ If CV exceeds 1%, try:
 Sheet resistance should be independent of the applied current for an ohmic sample. Measure at several current levels:
 
 ```bash
-openpauw measure --dmm-ip <IP> --current 10e-6  --output linearity.csv
-openpauw measure --dmm-ip <IP> --current 50e-6  --output linearity.csv
-openpauw measure --dmm-ip <IP> --current 100e-6 --output linearity.csv
-openpauw measure --dmm-ip <IP> --current 500e-6 --output linearity.csv
+openpauw measure --smu-ip <IP> --current 10e-6  --output linearity.csv
+openpauw measure --smu-ip <IP> --current 50e-6  --output linearity.csv
+openpauw measure --smu-ip <IP> --current 100e-6 --output linearity.csv
+openpauw measure --smu-ip <IP> --current 500e-6 --output linearity.csv
 ```
 
 Plot Rs vs. current. The result should be a flat line.
@@ -117,7 +117,7 @@ Deviations indicate:
 
 - **Rs increases with current** — Joule heating in the sample
 - **Rs decreases with current** — non-ohmic contacts (Schottky barrier, oxide layer)
-- **Rs unstable at low current** — voltage signal too small relative to DMM noise floor; increase current or NPLC
+- **Rs unstable at low current** — voltage signal too small relative to the SMU voltage-measurement noise floor; increase current or NPLC
 
 ## Validation Summary
 
@@ -132,3 +132,21 @@ Deviations indicate:
 ## Recording Results
 
 Keep a validation log with date, sample ID, firmware version, and results for each test. Re-validate after any hardware changes (new probe card, board revision, firmware update).
+
+## Automated Calibration
+
+Sections 1–5 above are automated by the `calibrate` subcommand. With a
+calibration sample of known sheet resistance mounted:
+
+```bash
+openpauw calibrate --smu-ip <IP> --expected-rs <ohm/sq> [--runs 10] \
+    [--currents 10e-6,50e-6,500e-6]
+```
+
+It runs board integrity, accuracy, reciprocity, SMU current readback,
+repeatability, and (with `--currents`) linearity, then writes
+`calibration-logs/calibration-<timestamp>/report.json` and `runs.csv`.
+Exit code 0 means every check passed. The same procedure is available in
+the browser GUI (`openpauw gui`) and as a guided bench script
+(`software/scripts/calibrate.sh`), which prints the git commands to
+commit a passing report as a calibration record.

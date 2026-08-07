@@ -5,7 +5,7 @@ abstract: >-
   A complete hardware, firmware, and software stack for automated four-terminal
   Van der Pauw sheet-resistance and resistivity measurements: a custom KiCAD
   analog-switching board (MAX328 multiplexers driven over I2C), C++ firmware for
-  the Adafruit Feather RP2040, and a Python host driver for a Keithley DMM6500.
+  the Adafruit Feather RP2040, and a Python host driver for a Keithley 2450 SourceMeter.
 type: software
 authors:
   - family-names: Nakamura
@@ -16,8 +16,8 @@ authors:
     affiliation: "Nanosystems Lab, University of Hawaiʻi at Mānoa"
 repository-code: "https://github.com/nanosystemslab/OpenPauw"
 license: GPL-3.0
-version: "1.4.1"
-date-released: "2026-06-13"
+version: "1.5.0"
+date-released: "2026-08-07"
 doi: 10.5281/zenodo.20683361
 identifiers:
   - type: doi
