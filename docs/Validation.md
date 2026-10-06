@@ -11,7 +11,9 @@ openpauw swtest
 openpauw cfgtest
 ```
 
-Both should report PASS. If either fails, check I2C connections to the MCP23017 and power to the MAX328 ICs (+15V boost converter output).
+Both should report PASS. **These tests require a jumper harness** between the J11 breakout header and J6/J9 — they always fail on a bare board, regardless of what is on the sample pads. See [`Switch_Test.md`](Switch_Test.md) for the jumper map, the full procedure, and LED meanings. Remove the jumpers before measuring.
+
+If the test still fails with jumpers installed, check I2C connections to the MCP23017 and power to the MAX328 ICs (+15V boost converter output).
 
 ## 2. Known Sample Measurement
 

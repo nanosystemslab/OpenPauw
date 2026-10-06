@@ -275,6 +275,7 @@ The Van der Pauw math (`VdpResult`, `sheet_resistance`, `sheet_resistance_from_c
 | Problem | Fix |
 |---------|-----|
 | `No serial port found` | Check USB cable. Use `--port /dev/ttyACM0` (Linux) or `--port /dev/cu.usbmodemXXXX` (macOS). |
+| `swtest` reports 0 connections / `cfgtest` FAIL, LED red | The self-test needs jumper wires from J11 to J6/J9. See [`docs/Switch_Test.md`](../docs/Switch_Test.md). |
 | `PING` returns no response | Unplug and replug USB. The board prints `READY` on boot — wait a moment after connecting. |
 | SMU connection refused | Verify the 2450's IP with its front panel. Check that port 5025 is reachable: `nc -zv <IP> 5025`. |
 | SMU connects but commands hang | The 2450 is in SCPI mode. Switch the command set to TSP (Menu > Communication > Settings) and reboot it. |
