@@ -40,18 +40,42 @@ Install eight female-to-female jumper wires from J11 to J6 and J9:
 | A2        | GP28         | J9 pin 3  | V+    | read back U3 output     |
 | A3        | GP29         | J9 pin 4  | V−    | read back U4 output     |
 
-J6 is the 4-pin header carrying the sample-pad nets. J9 is the 4-pin header carrying the
-four terminal nets (same nets as the banana jacks J1–J4). Pin 1 is the square pad on
-each header.
+### Finding the three headers
+
+- **J11** is the empty 12-pin header on the board edge beside the Feather, directly
+  below the row of MAX328 chips (U1–U4). Each pin has its Feather name printed next
+  to it on the silkscreen: `A0 A1 A2 A3 D24 D25 SCK MO MI RX TX D4`. Pin 1 (square
+  pad) is the `A0` end, nearest the Feather. Match jumpers by the printed label.
+- **J6** is the 4-pin header next to the J5 sample-pad connector, at the end of the
+  MAX328 column. It carries the four sample-pad nets.
+- **J9** is the 4-pin header next to the banana jacks J1–J4. It carries the four
+  terminal nets and is wired in parallel with the jacks.
+
+Pin 1 is the square pad on J6 and J9. The `SCK`, `D25`, `D24` and `D4` pins on J11
+stay empty.
+
+Wiring by label, operator view:
+
+```
+J6 (sample pads)                   J9 (terminals)
+  pin 1 (square) ──► J11 "MO"        pin 1 (square) ──► J11 "A0"
+  pin 2          ──► J11 "MI"        pin 2          ──► J11 "A1"
+  pin 3          ──► J11 "RX"        pin 3          ──► J11 "A2"
+  pin 4          ──► J11 "TX"        pin 4          ──► J11 "A3"
+```
+
+If J6 or J9 is plugged in backwards, `SWTEST` shows a diagonal or scrambled pattern
+of `X` and `.` instead of a full matrix. Flip the 4-pin plug and re-run.
 
 The authoritative GPIO map is in [`firmware/README.md`](../firmware/README.md) under
 *Test Harness Pins*.
 
 ## Procedure
 
-1. **Disconnect the instruments and the sample.** Remove the SMU/current-source leads
-   from `I+`/`I−`, the DMM leads from `V+`/`V−`, and lift the probes off the sample.
-   The jumpers tie these nets to 3.3 V logic pins.
+1. **Disconnect the instruments and the sample.** Unplug the banana leads from
+   `I+`/`I−`/`V+`/`V−` (J1–J4) and lift the probes off the sample. J9 is wired in
+   parallel with the banana jacks, so a live SMU on the jacks would be driven into
+   3.3 V logic pins through the jumpers.
 2. Install the eight jumpers per the table above.
 3. Power the board over USB and wait for `READY` (status LED dim green).
 4. Run the full scan:
